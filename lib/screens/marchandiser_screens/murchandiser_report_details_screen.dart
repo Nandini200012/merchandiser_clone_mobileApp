@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:merchandiser_clone/screens/manager_screens/api_service/manager_api_service.dart';
 import 'package:merchandiser_clone/screens/manager_screens/model/report_details_list_model.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_dashboard_screen.dart';
+import 'package:merchandiser_clone/utils/constants.dart';
 import 'package:merchandiser_clone/utils/willpop.dart';
 import 'package:super_banners/super_banners.dart';
 
@@ -78,7 +79,8 @@ class _MarchendiserReportDetailsScreenState
       },
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Colors.purple,
+          backgroundColor: Constants.primaryColor,
+          // Colors.purple,
           automaticallyImplyLeading: false,
           centerTitle: true,
           title: const Text(
@@ -130,105 +132,106 @@ class _MarchendiserReportDetailsScreenState
                             snapshot.data!;
                         return reportDetailsListModel.data.isEmpty
                             ? const Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [Text("No data available")],
-                            )
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [Text("No data available")],
+                              )
                             : ListView.builder(
-                              itemCount:
-                                  reportDetailsListModel.data.length ?? 0,
-                              itemBuilder: (context, index) {
-                                Datum data = reportDetailsListModel.data[index];
-                                return Stack(
-                                  children: [
-                                    Card(
-                                      elevation: 4,
-                                      child: ListTile(
-                                        title: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "ItemCode : ${data.prdouctId}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                itemCount:
+                                    reportDetailsListModel.data.length ?? 0,
+                                itemBuilder: (context, index) {
+                                  Datum data =
+                                      reportDetailsListModel.data[index];
+                                  return Stack(
+                                    children: [
+                                      Card(
+                                        elevation: 4,
+                                        child: ListTile(
+                                          title: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                "ItemCode : ${data.prdouctId}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Product Name : ${data.prdouctName}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                              Text(
+                                                "Product Name : ${data.prdouctName}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Unit : ${data.uom}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                              Text(
+                                                "Unit : ${data.uom}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Quantity : ${data.quantity.toStringAsFixed(2)}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                              Text(
+                                                "Quantity : ${data.quantity.toStringAsFixed(2)}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Price : ${data.cost.toStringAsFixed(2)}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                              Text(
+                                                "Price : ${data.cost.toStringAsFixed(2)}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Expiry Date : ${data.expiryDate}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                              Text(
+                                                "Expiry Date : ${data.expiryDate}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Note : ${data.note.isNotEmpty ? data.note : "N/A"}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                              Text(
+                                                "Note : ${data.note.isNotEmpty ? data.note : "N/A"}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                            Text(
-                                              "Reason : ${data.reason.isNotEmpty ? data.reason : "N/A"}",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w400,
-                                                fontSize: 10.sp,
+                                              Text(
+                                                "Reason : ${data.reason.isNotEmpty ? data.reason : "N/A"}",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 10.sp,
+                                                ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    Positioned(
-                                      right: 5,
-                                      top: 5,
-                                      child: CornerBanner(
-                                        bannerPosition:
-                                            CornerBannerPosition.topRight,
-                                        bannerColor: Colors.black.withOpacity(
-                                          0.8,
-                                        ),
-                                        child: Text(
-                                          data.reqStatus,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 10.sp,
+                                            ],
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              },
-                            );
+                                      Positioned(
+                                        right: 5,
+                                        top: 5,
+                                        child: CornerBanner(
+                                          bannerPosition:
+                                              CornerBannerPosition.topRight,
+                                          bannerColor: Colors.black.withOpacity(
+                                            0.8,
+                                          ),
+                                          child: Text(
+                                            data.reqStatus,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10.sp,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                       }
                     },
                   ),

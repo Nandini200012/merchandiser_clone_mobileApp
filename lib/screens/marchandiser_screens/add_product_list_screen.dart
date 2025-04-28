@@ -207,22 +207,21 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
 
   void _updateSelectedCategories() {
     setState(() {
-      selectedCategoryIds =
-          selectedCategories
-              .map((categoryName) {
-                try {
-                  return categories
-                      .firstWhere(
-                        (category) => category.grpName == categoryName,
-                      )
-                      .grpId;
-                } catch (e) {
-                  print("Category not found: $categoryName");
-                  return -1;
-                }
-              })
-              .where((id) => id != -1)
-              .toList();
+      selectedCategoryIds = selectedCategories
+          .map((categoryName) {
+            try {
+              return categories
+                  .firstWhere(
+                    (category) => category.grpName == categoryName,
+                  )
+                  .grpId;
+            } catch (e) {
+              print("Category not found: $categoryName");
+              return -1;
+            }
+          })
+          .where((id) => id != -1)
+          .toList();
       print("Selected Category Names -------->>>>: $selectedCategories");
       print("Selected Category IDS -------->>>>: $selectedCategoryIds");
     });
@@ -253,14 +252,13 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
 
     void _filterCategories(String query) {
       setState(() {
-        filteredCategories =
-            categories
-                .where(
-                  (category) => category.grpName.toLowerCase().contains(
+        filteredCategories = categories
+            .where(
+              (category) => category.grpName.toLowerCase().contains(
                     query.toLowerCase(),
                   ),
-                )
-                .toList();
+            )
+            .toList();
       });
     }
 
@@ -291,6 +289,7 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
               height: screenHeight * 0.6,
               padding: EdgeInsets.all(screenWidth * 0.04),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -346,20 +345,19 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                     child: ListView.builder(
                       itemCount: sortedCategories.length,
                       itemBuilder: (context, index) {
-                        String firstLetter =
-                            sortedCategories[index].grpName
-                                .substring(0, 1)
-                                .toUpperCase();
+                        String firstLetter = sortedCategories[index]
+                            .grpName
+                            .substring(0, 1)
+                            .toUpperCase();
                         bool isSelected = localSelectedCategories.contains(
                           sortedCategories[index].grpName,
                         );
 
                         return Container(
-                          color:
-                              isSelected
-                                  ? Colors.blue.withOpacity(0.2)
-                                  : Colors
-                                      .transparent, // Change color when selected
+                          color: isSelected
+                              ? Colors.blue.withOpacity(0.2)
+                              : Colors
+                                  .transparent, // Change color when selected
                           child: CheckboxListTile(
                             value: isSelected,
                             onChanged: (bool? value) {
@@ -402,7 +400,8 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                             ),
                             secondary: CircleAvatar(
                               radius: screenWidth * 0.06,
-                              backgroundColor: Colors.purple,
+                              backgroundColor: Constants.primaryColor,
+                              // Colors.purple,
                               child: Text(
                                 firstLetter,
                                 style: TextStyle(
@@ -412,10 +411,9 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                               ),
                             ),
                             // Adjust the color for the selected state
-                            tileColor:
-                                isSelected
-                                    ? Colors.blue.withOpacity(0.2)
-                                    : Colors.transparent,
+                            tileColor: isSelected
+                                ? Colors.blue.withOpacity(0.2)
+                                : Colors.transparent,
                           ),
                         );
                       },
@@ -444,7 +442,7 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Colors.purple,
+          backgroundColor: const Color.fromARGB(255, 224, 177, 233),
           automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: () {
@@ -529,7 +527,7 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                                     labelStyle: TextStyle(
                                       fontSize:
                                           MediaQuery.of(context).size.width *
-                                          0.04,
+                                              0.04,
                                     ),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(
@@ -540,53 +538,51 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                                     suffixIcon:
                                         _searchController.text.isNotEmpty
                                             ? IconButton(
-                                              icon: Icon(
-                                                Icons.close,
-                                                color: Colors.red,
-                                                size:
-                                                    MediaQuery.of(
-                                                      context,
-                                                    ).size.width *
-                                                    0.06,
-                                              ),
-                                              onPressed: () {
-                                                _searchController.clear();
-                                                setState(() {
-                                                  _applyFilters();
-                                                });
-                                              },
-                                            )
+                                                icon: Icon(
+                                                  Icons.close,
+                                                  color: Colors.red,
+                                                  size: MediaQuery.of(
+                                                        context,
+                                                      ).size.width *
+                                                      0.06,
+                                                ),
+                                                onPressed: () {
+                                                  _searchController.clear();
+                                                  setState(() {
+                                                    _applyFilters();
+                                                  });
+                                                },
+                                              )
                                             : IconButton(
-                                              icon: Icon(
-                                                Icons.search,
-                                                color: Colors.red,
-                                                size:
-                                                    MediaQuery.of(
-                                                      context,
-                                                    ).size.width *
-                                                    0.06,
+                                                icon: Icon(
+                                                  Icons.search,
+                                                  color: Colors.red,
+                                                  size: MediaQuery.of(
+                                                        context,
+                                                      ).size.width *
+                                                      0.06,
+                                                ),
+                                                onPressed: () {
+                                                  setState(() {
+                                                    _applyFilters();
+                                                  });
+                                                },
                                               ),
-                                              onPressed: () {
-                                                setState(() {
-                                                  _applyFilters();
-                                                });
-                                              },
-                                            ),
                                     filled: true,
                                     fillColor: Colors.white,
                                     contentPadding: EdgeInsets.symmetric(
                                       vertical:
                                           MediaQuery.of(context).size.height *
-                                          0.01,
+                                              0.01,
                                       horizontal:
                                           MediaQuery.of(context).size.width *
-                                          0.04,
+                                              0.04,
                                     ),
                                   ),
                                   style: TextStyle(
                                     fontSize:
                                         MediaQuery.of(context).size.width *
-                                        0.04,
+                                            0.04,
                                   ),
                                 ),
                               ),
@@ -604,436 +600,368 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                       ),
                     ],
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.all(
-                          MediaQuery.of(context).size.width * 0.02,
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 0,
+                        // MediaQuery.of(context).size.width * 0.02,
+                        vertical: 0
+                        // MediaQuery.of(context).size.width * 0.001,
+                        // MediaQuery.of(context).size.width * 0.02,
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "Categories",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontSize:
-                                    MediaQuery.of(context).size.width * 0.045,
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(
-                                Icons.filter_list_sharp,
-                                color: Colors.blue,
-                                size: MediaQuery.of(context).size.width * 0.06,
-                              ),
-                              onPressed: () {
-                                if (productAndCategories != null) {
-                                  productAndCategories.then((data) {
-                                    _showFilterBottomSheet(
-                                      context,
-                                      data.data.categories,
-                                    );
-                                  });
-                                }
-                              },
-                            ),
-                          ],
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Products",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: MediaQuery.of(context).size.width * 0.045,
+                          ),
                         ),
-                      ),
-                      SizedBox(
-                        height:
-                            MediaQuery.of(context).size.height *
-                            0.14, // Adjusted height for better spacing
-                        child: FutureBuilder<ProductAndCategoriesModel>(
-                          future: productAndCategories,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CupertinoActivityIndicator(),
-                              );
-                            } else if (snapshot.hasError) {
-                              return Text(
-                                'Error fetching data ${snapshot.error}',
-                              );
-                            } else {
-                              List<Category> categories =
-                                  snapshot.data!.data.categories;
-                              return ListView.builder(
-                                shrinkWrap: true,
-                                itemCount: categories.length,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  Category category = categories[index];
-                                  String firstLetterofCategory =
-                                      category.grpName
-                                          .substring(0, 1)
-                                          .toUpperCase();
-                                  return Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal:
-                                          MediaQuery.of(context).size.width *
-                                          0.02,
-                                    ),
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: Colors.grey,
-                                          width:
-                                              MediaQuery.of(
-                                                context,
-                                              ).size.width *
-                                              0.002,
-                                        ),
-                                        borderRadius: BorderRadius.circular(12),
-                                        color: Colors.white,
-                                      ),
-                                      padding: EdgeInsets.all(
-                                        MediaQuery.of(context).size.width *
-                                            0.02,
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          CircleAvatar(
-                                            radius:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width *
-                                                0.06,
-                                            backgroundColor: Colors.purple,
-                                            child: Text(
-                                              firstLetterofCategory,
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize:
-                                                    MediaQuery.of(
-                                                      context,
-                                                    ).size.width *
-                                                    0.05,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.height *
-                                                0.01,
-                                          ),
-                                          Container(
-                                            width:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width *
-                                                0.18,
-                                            child: Text(
-                                              category.grpName,
-                                              textAlign: TextAlign.center,
-                                              overflow: TextOverflow.ellipsis,
-                                              maxLines:
-                                                  2, // Allows the text to wrap to two lines
-                                              style: TextStyle(
-                                                fontSize:
-                                                    MediaQuery.of(
-                                                      context,
-                                                    ).size.width *
-                                                    0.03,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              );
+                        const Spacer(),
+                        IconButton(
+                          icon: Icon(
+                            Icons.filter_list_sharp,
+                            color: Colors.blue,
+                            size: MediaQuery.of(context).size.width * 0.06,
+                          ),
+                          onPressed: () {
+                            if (productAndCategories != null) {
+                              productAndCategories.then((data) {
+                                _showFilterBottomSheet(
+                                  context,
+                                  data.data.categories,
+                                );
+                              });
                             }
                           },
                         ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ), // Reduced gap between categories and products
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Align(
-                      alignment: Alignment.topLeft,
-                      child: Text(
-                        "Products",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w800,
-                          color: Colors.black,
-                        ),
-                      ),
+                      ],
                     ),
                   ),
+                  // SizedBox(
+                  //   height: 5,
+                  // ), // Reduced gap between categories and products
+                  // const Padding(
+                  //   padding: EdgeInsets.all(8.0),
+                  //   child: Align(
+                  //     alignment: Alignment.topLeft,
+                  //     child: Text(
+                  //       "Products",
+                  //       style: TextStyle(
+                  //         fontWeight: FontWeight.w800,
+                  //         color: Colors.black,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Expanded(
                     child: FutureBuilder<ProductAndCategoriesModel>(
                       future: productAndCategories,
                       builder: (context, snapshot) {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return Center(child: CupertinoActivityIndicator());
+                          return const Center(
+                              child: CupertinoActivityIndicator());
                         } else if (snapshot.hasError) {
-                          return Text("Error ${snapshot.error}");
+                          return Center(
+                              child: Text("Error: ${snapshot.error}"));
                         } else {
-                          List<Product> products = snapshot.data!.data.products;
-                          return products.isNotEmpty
-                              ? ListView.builder(
-                                itemCount: products.length,
-                                shrinkWrap: true,
-                                itemBuilder: (context, index) {
-                                  // Check if this index is the one where info button was clicked
-                                  if (index == infoButtonClickedIndex) {
-                                    return InkWell(
-                                      onTap: () {
-                                        productDetailsProvider
-                                            .setProductDetails(
-                                              selectedProductId,
-                                              selectedProductName,
-                                              selectedUOM,
-                                              selectedUOMId,
-                                              selectedCost,
-                                              selectedItemID,
-                                              selectedbarcode,
-                                            );
-                                        _searchController.clear();
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) =>
-                                                    CartDetailsScreen(),
-                                          ),
-                                        );
-                                      },
-                                      child: Card(
-                                        color: Colors.white,
-                                        child: ListTile(
-                                          leading: CircleAvatar(
-                                            backgroundColor: Colors.purple,
-                                            child: Center(
-                                              child: Text(
-                                                selectedProductName.substring(
-                                                  0,
-                                                  1,
-                                                ),
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          title: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                selectedProductName,
-                                                style: TextStyle(fontSize: 12),
-                                              ),
-                                              Text(
-                                                'Barcode : $selectedProductId',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    'UNIT: $selectedUOM',
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.green,
-                                                    ),
-                                                  ),
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      Icons.info_outline,
-                                                    ),
-                                                    color: Colors.blue,
-                                                    onPressed: () {
-                                                      showAlternativeUnits(
-                                                        context,
-                                                        products[index].itemID,
-                                                        index,
-                                                      );
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                'Price : ${selectedCost.toStringAsFixed(3)}',
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }
-
-                                  // Original code for other items
-                                  String productName =
-                                      products[index].productName;
-                                  dynamic productId = products[index].productId;
-                                  dynamic itemID = products[index].itemID;
-                                  dynamic UOMId = products[index].UOMId;
-                                  String firstLetter = productName.substring(
-                                    0,
-                                    1,
-                                  );
-                                  String productUOM = products[index].UOM;
-                                  double productCost =
-                                      products[index].ProductCost;
-
-                                  bool isInCart = cartProvider.items.any(
-                                    (item) =>
-                                        item.itemId == itemID &&
-                                        item.productIndex == productId,
-                                  );
-
-                                  String barcode = products[index].barcode;
-
-                                  return InkWell(
-                                    onTap: () {
-                                      productDetailsProvider.setProductDetails(
-                                        productId,
-                                        productName,
-                                        productUOM,
-                                        UOMId,
-                                        productCost,
-                                        itemID,
-                                        barcode,
-                                      );
-                                      _searchController.clear();
-                                      Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                          builder:
-                                              (context) => CartDetailsScreen(),
-                                        ),
-                                      );
-                                    },
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                        color:
-                                            isInCart
-                                                ? Colors.yellow[300]
-                                                : Colors
-                                                    .white, // Change color if in cart
-                                        border: Border.all(
-                                          color: Colors.grey[300]!,
-                                        ), // Add a border
-                                        borderRadius: BorderRadius.circular(
-                                          10,
-                                        ), // Rounded corners
-                                      ),
-                                      margin: EdgeInsets.symmetric(
-                                        vertical: 4.0,
-                                        horizontal: 8.0,
-                                      ), // Margin around each item
-                                      padding: EdgeInsets.all(
-                                        8.0,
-                                      ), // Padding inside each item
-                                      child: Row(
-                                        children: [
-                                          CircleAvatar(
-                                            backgroundColor: Colors.purple,
-                                            child: Center(
-                                              child: Text(
-                                                firstLetter,
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            width: 8.0,
-                                          ), // Space between avatar and text
-                                          Expanded(
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  productName,
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  'ItemCode : ${barcode.toString()}',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ), // Reduced font size
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    Text(
-                                                      'UNIT: $productUOM',
-                                                      style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.green,
-                                                      ),
-                                                    ), // Reduced font size
-                                                    IconButton(
-                                                      icon: Icon(
-                                                        Icons.info_outline,
-                                                        size: 20,
-                                                      ), // Reduced icon size
-                                                      color: Colors.blue,
-                                                      onPressed: () {
-                                                        showAlternativeUnits(
-                                                          context,
-                                                          itemID,
-                                                          index,
-                                                        );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                                Text(
-                                                  'Price : ${productCost.toStringAsFixed(3)}',
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.grey,
-                                                  ),
-                                                ), // Reduced font size
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              )
-                              : Center(
-                                child: Text(
-                                  'No data found.',
-                                  style: TextStyle(fontSize: 18),
-                                ),
-                              );
+                          final List<Product> products =
+                              snapshot.data!.data.products;
+                          if (products.isEmpty) {
+                            return const Center(
+                              child: Text('No data found.',
+                                  style: TextStyle(fontSize: 18)),
+                            );
+                          }
+                          return ListView.builder(
+                            padding: EdgeInsets.only(bottom: 20.h),
+                            itemCount: products.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final product = products[index];
+                              final bool isSelected =
+                                  index == infoButtonClickedIndex;
+                              return isSelected
+                                  ? _buildSelectedProductTile(
+                                      context, productDetailsProvider)
+                                  : _buildProductTile(context, product, index,
+                                      cartProvider, productDetailsProvider);
+                            },
+                          );
                         }
                       },
                     ),
                   ),
+
+                  // Expanded(
+                  //   child: FutureBuilder<ProductAndCategoriesModel>(
+                  //     future: productAndCategories,
+                  //     builder: (context, snapshot) {
+                  //       if (snapshot.connectionState ==
+                  //           ConnectionState.waiting) {
+                  //         return Center(child: CupertinoActivityIndicator());
+                  //       } else if (snapshot.hasError) {
+                  //         return Text("Error ${snapshot.error}");
+                  //       } else {
+                  //         List<Product> products = snapshot.data!.data.products;
+                  //         return products.isNotEmpty
+                  //             ? ListView.builder(
+                  //                 itemCount: products.length,
+                  //                 shrinkWrap: true,
+                  //                 itemBuilder: (context, index) {
+                  //                   // Check if this index is the one where info button was clicked
+                  //                   if (index == infoButtonClickedIndex) {
+                  //                     return InkWell(
+                  //                       onTap: () {
+                  //                         productDetailsProvider
+                  //                             .setProductDetails(
+                  //                           selectedProductId,
+                  //                           selectedProductName,
+                  //                           selectedUOM,
+                  //                           selectedUOMId,
+                  //                           selectedCost,
+                  //                           selectedItemID,
+                  //                           selectedbarcode,
+                  //                         );
+                  //                         _searchController.clear();
+                  //                         Navigator.of(context).push(
+                  //                           MaterialPageRoute(
+                  //                             builder: (context) =>
+                  //                                 CartDetailsScreen(),
+                  //                           ),
+                  //                         );
+                  //                       },
+                  //                       child: Card(
+                  //                         color: Colors.white,
+                  //                         child: ListTile(
+                  //                           leading: CircleAvatar(
+                  //                             backgroundColor: Colors.purple,
+                  //                             child: Center(
+                  //                               child: Text(
+                  //                                 selectedProductName.substring(
+                  //                                   0,
+                  //                                   1,
+                  //                                 ),
+                  //                                 style: TextStyle(
+                  //                                   color: Colors.white,
+                  //                                 ),
+                  //                               ),
+                  //                             ),
+                  //                           ),
+                  //                           title: Column(
+                  //                             mainAxisSize: MainAxisSize.min,
+                  //                             crossAxisAlignment:
+                  //                                 CrossAxisAlignment.start,
+                  //                             children: [
+                  //                               Text(
+                  //                                 selectedProductName,
+                  //                                 style:
+                  //                                     TextStyle(fontSize: 12),
+                  //                               ),
+                  //                               Text(
+                  //                                 'Barcode : $selectedProductId',
+                  //                                 style: TextStyle(
+                  //                                   fontSize: 12,
+                  //                                   color: Colors.grey,
+                  //                                 ),
+                  //                               ),
+                  //                               Row(
+                  //                                 mainAxisAlignment:
+                  //                                     MainAxisAlignment
+                  //                                         .spaceBetween,
+                  //                                 children: [
+                  //                                   Text(
+                  //                                     'UNIT: $selectedUOM',
+                  //                                     style: TextStyle(
+                  //                                       fontSize: 12,
+                  //                                       color: Colors.green,
+                  //                                     ),
+                  //                                   ),
+                  //                                   IconButton(
+                  //                                     icon: Icon(
+                  //                                       Icons.info_outline,
+                  //                                     ),
+                  //                                     color: Colors.blue,
+                  //                                     onPressed: () {
+                  //                                       showAlternativeUnits(
+                  //                                         context,
+                  //                                         products[index]
+                  //                                             .itemID,
+                  //                                         index,
+                  //                                       );
+                  //                                     },
+                  //                                   ),
+                  //                                 ],
+                  //                               ),
+                  //                               Text(
+                  //                                 'Price : ${selectedCost.toStringAsFixed(3)}',
+                  //                                 style: TextStyle(
+                  //                                   fontSize: 12,
+                  //                                   color: Colors.grey,
+                  //                                 ),
+                  //                               ),
+                  //                             ],
+                  //                           ),
+                  //                         ),
+                  //                       ),
+                  //                     );
+                  //                   }
+
+                  //                   // Original code for other items
+                  //                   String productName =
+                  //                       products[index].productName;
+                  //                   dynamic productId =
+                  //                       products[index].productId;
+                  //                   dynamic itemID = products[index].itemID;
+                  //                   dynamic UOMId = products[index].UOMId;
+                  //                   String firstLetter = productName.substring(
+                  //                     0,
+                  //                     1,
+                  //                   );
+                  //                   String productUOM = products[index].UOM;
+                  //                   double productCost =
+                  //                       products[index].ProductCost;
+
+                  //                   bool isInCart = cartProvider.items.any(
+                  //                     (item) =>
+                  //                         item.itemId == itemID &&
+                  //                         item.productIndex == productId,
+                  //                   );
+
+                  //                   String barcode = products[index].barcode;
+
+                  //                   return InkWell(
+                  //                     onTap: () {
+                  //                       productDetailsProvider
+                  //                           .setProductDetails(
+                  //                         productId,
+                  //                         productName,
+                  //                         productUOM,
+                  //                         UOMId,
+                  //                         productCost,
+                  //                         itemID,
+                  //                         barcode,
+                  //                       );
+                  //                       _searchController.clear();
+                  //                       Navigator.of(context).push(
+                  //                         MaterialPageRoute(
+                  //                           builder: (context) =>
+                  //                               CartDetailsScreen(),
+                  //                         ),
+                  //                       );
+                  //                     },
+                  //                     child: Container(
+                  //                       decoration: BoxDecoration(
+                  //                         color: isInCart
+                  //                             ? Colors.yellow[300]
+                  //                             : Colors
+                  //                                 .white, // Change color if in cart
+                  //                         border: Border.all(
+                  //                           color: Colors.grey[300]!,
+                  //                         ), // Add a border
+                  //                         borderRadius: BorderRadius.circular(
+                  //                           10,
+                  //                         ), // Rounded corners
+                  //                       ),
+                  //                       margin: EdgeInsets.symmetric(
+                  //                         vertical: 4.0,
+                  //                         horizontal: 8.0,
+                  //                       ), // Margin around each item
+                  //                       padding: EdgeInsets.all(
+                  //                         8.0,
+                  //                       ), // Padding inside each item
+                  //                       child: Row(
+                  //                         children: [
+                  //                           CircleAvatar(
+                  //                             backgroundColor: Colors.purple,
+                  //                             child: Center(
+                  //                               child: Text(
+                  //                                 firstLetter,
+                  //                                 style: TextStyle(
+                  //                                   color: Colors.white,
+                  //                                 ),
+                  //                               ),
+                  //                             ),
+                  //                           ),
+                  //                           SizedBox(
+                  //                             width: 8.0,
+                  //                           ), // Space between avatar and text
+                  //                           Expanded(
+                  //                             child: Column(
+                  //                               crossAxisAlignment:
+                  //                                   CrossAxisAlignment.start,
+                  //                               children: [
+                  //                                 Text(
+                  //                                   productName,
+                  //                                   style: TextStyle(
+                  //                                     fontSize: 14,
+                  //                                   ),
+                  //                                 ),
+                  //                                 Text(
+                  //                                   'ItemCode : ${barcode.toString()}',
+                  //                                   style: TextStyle(
+                  //                                     fontSize: 12,
+                  //                                     color: Colors.grey,
+                  //                                   ),
+                  //                                 ), // Reduced font size
+                  //                                 Row(
+                  //                                   mainAxisAlignment:
+                  //                                       MainAxisAlignment
+                  //                                           .spaceBetween,
+                  //                                   children: [
+                  //                                     Text(
+                  //                                       'UNIT: $productUOM',
+                  //                                       style: TextStyle(
+                  //                                         fontSize: 12,
+                  //                                         color: Colors.green,
+                  //                                       ),
+                  //                                     ), // Reduced font size
+                  //                                     IconButton(
+                  //                                       icon: Icon(
+                  //                                         Icons.info_outline,
+                  //                                         size: 20,
+                  //                                       ), // Reduced icon size
+                  //                                       color: Colors.blue,
+                  //                                       onPressed: () {
+                  //                                         showAlternativeUnits(
+                  //                                           context,
+                  //                                           itemID,
+                  //                                           index,
+                  //                                         );
+                  //                                       },
+                  //                                     ),
+                  //                                   ],
+                  //                                 ),
+                  //                                 Text(
+                  //                                   'Price : ${productCost.toStringAsFixed(3)}',
+                  //                                   style: TextStyle(
+                  //                                     fontSize: 12,
+                  //                                     color: Colors.grey,
+                  //                                   ),
+                  //                                 ), // Reduced font size
+                  //                               ],
+                  //                             ),
+                  //                           ),
+                  //                         ],
+                  //                       ),
+                  //                     ),
+                  //                   );
+                  //                 },
+                  //               )
+                  //             : Center(
+                  //                 child: Text(
+                  //                   'No data found.',
+                  //                   style: TextStyle(fontSize: 18),
+                  //                 ),
+                  //               );
+                  //       }
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
             ),
@@ -1050,7 +978,7 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   gradient: const LinearGradient(
-                    colors: [Colors.deepPurple, Colors.purple],
+                    colors: [Colors.purple, Constants.primaryColor],
                     begin: Alignment.centerLeft,
                     end: Alignment.centerRight,
                   ),
@@ -1147,4 +1075,273 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
       },
     );
   }
+
+// Build the special selected product tile
+  Widget _buildSelectedProductTile(
+      BuildContext context, ProductDetailsProvider productDetailsProvider) {
+    return InkWell(
+      onTap: () {
+        productDetailsProvider.setProductDetails(
+          selectedProductId,
+          selectedProductName,
+          selectedUOM,
+          selectedUOMId,
+          selectedCost,
+          selectedItemID,
+          selectedbarcode,
+        );
+        _searchController.clear();
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => CartDetailsScreen()),
+        );
+      },
+      child: Card(
+        color: Colors.white,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Constants.primaryColor,
+            //  Colors.purple,
+            child: Center(
+              child: Text(
+                selectedProductName.substring(0, 1),
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          title: _buildProductDetailsColumn(
+            productName: selectedProductName,
+            barcode: selectedProductId,
+            uom: selectedUOM,
+            price: selectedCost,
+            onInfoPressed: () {
+              showAlternativeUnits(
+                  context, selectedItemID, infoButtonClickedIndex!);
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+// Build the normal product tile
+  Widget _buildProductTile(
+      BuildContext context,
+      Product product,
+      int index,
+      CartProvider cartProvider,
+      ProductDetailsProvider productDetailsProvider) {
+    final String firstLetter = product.productName.substring(0, 1);
+    final bool isInCart = cartProvider.items.any(
+      (item) =>
+          item.itemId == product.itemID &&
+          item.productIndex == product.productId,
+    );
+
+    return InkWell(
+      onTap: () {
+        productDetailsProvider.setProductDetails(
+          product.productId,
+          product.productName,
+          product.UOM,
+          product.UOMId,
+          product.ProductCost,
+          product.itemID,
+          product.barcode,
+        );
+        _searchController.clear();
+        Navigator.of(context).push(
+          MaterialPageRoute(builder: (context) => CartDetailsScreen()),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: isInCart ? Colors.yellow[300] : Colors.white,
+          border: Border.all(color: Colors.grey[300]!),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
+        padding: const EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: const Color.fromARGB(255, 225, 152, 237),
+              child: Center(
+                child: Text(firstLetter,
+                    style: const TextStyle(color: Colors.white)),
+              ),
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: _buildProductDetailsColumn(
+                productName: product.productName,
+                barcode: product.barcode,
+                uom: product.UOM,
+                price: product.ProductCost,
+                onInfoPressed: () {
+                  showAlternativeUnits(context, product.itemID, index);
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+// Reusable column for product details
+  Widget _buildProductDetailsColumn({
+    required String productName,
+    required dynamic barcode,
+    required String uom,
+    required double price,
+    required VoidCallback onInfoPressed,
+  }) {
+    return Row(
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+                width: MediaQuery.of(context).size.width * .67,
+                child: Text(
+                  productName,
+                  style: const TextStyle(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                )),
+            Text(
+              'Barcode : $barcode',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+            Text(
+              'UNIT: $uom',
+              style: const TextStyle(fontSize: 12, color: Colors.green),
+            ),
+            Text(
+              'Price : ${price.toStringAsFixed(3)}',
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
+            ),
+          ],
+        ),
+        IconButton(
+          icon: const Icon(Icons.info_outline, size: 24, color: Colors.blue),
+          onPressed: onInfoPressed,
+        ),
+      ],
+    );
+  }
 }
+
+
+// ------>>...
+  // SizedBox(
+                      //   height:
+                      //       MediaQuery.of(context).size.height *
+                      //       0.14, // Adjusted height for better spacing
+                      //   child: FutureBuilder<ProductAndCategoriesModel>(
+                      //     future: productAndCategories,
+                      //     builder: (context, snapshot) {
+                      //       if (snapshot.connectionState ==
+                      //           ConnectionState.waiting) {
+                      //         return const Center(
+                      //           child: CupertinoActivityIndicator(),
+                      //         );
+                      //       } else if (snapshot.hasError) {
+                      //         return Text(
+                      //           'Error fetching data ${snapshot.error}',
+                      //         );
+                      //       } else {
+                      //         List<Category> categories =
+                      //             snapshot.data!.data.categories;
+                      //         return ListView.builder(
+                      //           shrinkWrap: true,
+                      //           itemCount: categories.length,
+                      //           scrollDirection: Axis.horizontal,
+                      //           itemBuilder: (context, index) {
+                      //             Category category = categories[index];
+                      //             String firstLetterofCategory =
+                      //                 category.grpName
+                      //                     .substring(0, 1)
+                      //                     .toUpperCase();
+                      //             return Padding(
+                      //               padding: EdgeInsets.symmetric(
+                      //                 horizontal:
+                      //                     MediaQuery.of(context).size.width *
+                      //                     0.02,
+                      //               ),
+                      //               child: Container(
+                      //                 decoration: BoxDecoration(
+                      //                   border: Border.all(
+                      //                     color: Colors.grey,
+                      //                     width:
+                      //                         MediaQuery.of(
+                      //                           context,
+                      //                         ).size.width *
+                      //                         0.002,
+                      //                   ),
+                      //                   borderRadius: BorderRadius.circular(12),
+                      //                   color: Colors.white,
+                      //                 ),
+                      //                 padding: EdgeInsets.all(
+                      //                   MediaQuery.of(context).size.width *
+                      //                       0.02,
+                      //                 ),
+                      //                 child: Column(
+                      //                   children: [
+                      //                     CircleAvatar(
+                      //                       radius:
+                      //                           MediaQuery.of(
+                      //                             context,
+                      //                           ).size.width *
+                      //                           0.06,
+                      //                       backgroundColor: Colors.purple,
+                      //                       child: Text(
+                      //                         firstLetterofCategory,
+                      //                         style: TextStyle(
+                      //                           color: Colors.white,
+                      //                           fontSize:
+                      //                               MediaQuery.of(
+                      //                                 context,
+                      //                               ).size.width *
+                      //                               0.05,
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                     SizedBox(
+                      //                       height:
+                      //                           MediaQuery.of(
+                      //                             context,
+                      //                           ).size.height *
+                      //                           0.01,
+                      //                     ),
+                      //                     Container(
+                      //                       width:
+                      //                           MediaQuery.of(
+                      //                             context,
+                      //                           ).size.width *
+                      //                           0.18,
+                      //                       child: Text(
+                      //                         category.grpName,
+                      //                         textAlign: TextAlign.center,
+                      //                         overflow: TextOverflow.ellipsis,
+                      //                         maxLines:
+                      //                             2, // Allows the text to wrap to two lines
+                      //                         style: TextStyle(
+                      //                           fontSize:
+                      //                               MediaQuery.of(
+                      //                                 context,
+                      //                               ).size.width *
+                      //                               0.03,
+                      //                         ),
+                      //                       ),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               ),
+                      //             );
+                      //           },
+                      //         );
+                      //       }
+                      //     },
+                      //   ),
+                      // ),

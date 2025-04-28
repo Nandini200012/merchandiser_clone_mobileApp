@@ -47,9 +47,9 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var vendorDetailsProvider =
           Provider.of<CreateRequestVendorDetailsProvider>(
-            context,
-            listen: false,
-          );
+        context,
+        listen: false,
+      );
       _fetchSalesmanData(vendorDetailsProvider.vendorId);
     });
   }
@@ -63,14 +63,12 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
         // Set initial selected sales person
         var vendorDetailsProvider =
             Provider.of<CreateRequestVendorDetailsProvider>(
-              context,
-              listen: false,
-            );
-        selectedSalesManName =
-            vendorDetailsProvider.salesPersonName ??
+          context,
+          listen: false,
+        );
+        selectedSalesManName = vendorDetailsProvider.salesPersonName ??
             _allSalesPersons.first.salesPersonName;
-        selectedSalesPersonId =
-            vendorDetailsProvider.salesPerson ??
+        selectedSalesPersonId = vendorDetailsProvider.salesPerson ??
             _allSalesPersons.first.salesPerson;
         selectedCustomer = selectedSalesManName;
       });
@@ -82,14 +80,13 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
       if (query.isEmpty) {
         _filteredSalesPersons = _allSalesPersons;
       } else {
-        _filteredSalesPersons =
-            _allSalesPersons
-                .where(
-                  (person) => person.salesPersonName.toLowerCase().contains(
+        _filteredSalesPersons = _allSalesPersons
+            .where(
+              (person) => person.salesPersonName.toLowerCase().contains(
                     query.toLowerCase(),
                   ),
-                )
-                .toList();
+            )
+            .toList();
       }
     });
   }
@@ -118,7 +115,8 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Colors.purple,
+          backgroundColor: Constants.primaryColor,
+          // Colors.purple,
           automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: () {
@@ -192,7 +190,7 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
                           ListTile(
                             leading: CircleAvatar(
                               radius: 25,
-                              backgroundColor: Colors.purple,
+                              backgroundColor: Constants.primaryColor,
                               child: Center(
                                 child: Text(
                                   selectedCustomer.isNotEmpty
@@ -211,15 +209,14 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
-                            trailing:
-                                _filteredSalesPersons.isNotEmpty
-                                    ? Icon(
-                                      _isExpanded
-                                          ? Icons.arrow_drop_up
-                                          : Icons.arrow_drop_down,
-                                      color: Colors.black,
-                                    )
-                                    : null,
+                            trailing: _filteredSalesPersons.isNotEmpty
+                                ? Icon(
+                                    _isExpanded
+                                        ? Icons.arrow_drop_up
+                                        : Icons.arrow_drop_down,
+                                    color: Colors.black,
+                                  )
+                                : null,
                             onTap: () {
                               if (_filteredSalesPersons.isNotEmpty) {
                                 setState(() {
@@ -269,7 +266,9 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
                                         },
                                         title: Text(salesManName),
                                         leading: CircleAvatar(
-                                          backgroundColor: Colors.purple,
+                                          backgroundColor:
+                                              Constants.primaryColor,
+                                          // Colors.purple,
                                           child: Center(
                                             child: Text(
                                               firstLetterofSalesMan,
@@ -321,7 +320,8 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
-          backgroundColor: Colors.purple,
+          backgroundColor: Constants.primaryColor,
+          // Colors.purple,
           onPressed: () {
             if (selectedSalesManName.isEmpty) {
               ScaffoldMessenger.of(context).showSnackBar(

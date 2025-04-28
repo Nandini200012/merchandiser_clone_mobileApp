@@ -4,6 +4,7 @@ import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:merchandiser_clone/provider/create_request_vendor_detals.dart';
+import 'package:merchandiser_clone/utils/constants.dart';
 import 'package:merchandiser_clone/utils/urls.dart';
 import 'package:provider/provider.dart';
 
@@ -69,7 +70,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          backgroundColor: Colors.purple,
+          backgroundColor: Constants.primaryColor,
           automaticallyImplyLeading: false,
           leading: IconButton(
             onPressed: () {
@@ -228,10 +229,9 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
-                                color:
-                                    _isExpiryDateValid
-                                        ? Colors.grey
-                                        : Colors.red,
+                                color: _isExpiryDateValid
+                                    ? Colors.grey
+                                    : Colors.red,
                               ),
                             ),
                             child: TextButton(
@@ -244,8 +244,8 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                   _selectedDate == null
                                       ? "Select Date"
                                       : DateFormat(
-                                        'dd/MM/yyyy',
-                                      ).format(_selectedDate!),
+                                          'dd/MM/yyyy',
+                                        ).format(_selectedDate!),
                                   style: TextStyle(color: Colors.black87),
                                 ),
                               ),
@@ -336,15 +336,14 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                   value: "Other",
                                 ),
                               ],
-                              onChanged:
-                                  _selectedReason == "EXPIRED GOODS"
-                                      ? null
-                                      : (value) {
-                                        setState(() {
-                                          _selectedReason = value;
-                                          _showReasonText = value == "Other";
-                                        });
-                                      },
+                              onChanged: _selectedReason == "EXPIRED GOODS"
+                                  ? null
+                                  : (value) {
+                                      setState(() {
+                                        _selectedReason = value;
+                                        _showReasonText = value == "Other";
+                                      });
+                                    },
                             ),
                           ),
                         ],
@@ -420,7 +419,8 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         height: screenHeight * 0.06,
                         width: screenHeight * 0.06,
                         decoration: BoxDecoration(
-                          color: Colors.purple,
+                          color: Constants.primaryColor,
+                          // Colors.purple,
                           shape: BoxShape.circle,
                         ),
                         child: IconButton(
@@ -542,15 +542,15 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                 child: SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed:
-                        itemList.isEmpty
-                            ? null
-                            : () {
-                              _showAddToCartDialog(context);
-                            },
+                    onPressed: itemList.isEmpty
+                        ? null
+                        : () {
+                            _showAddToCartDialog(context);
+                          },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor:
-                          itemList.isEmpty ? Colors.grey : Colors.purple,
+                      backgroundColor: itemList.isEmpty
+                          ? Colors.grey.shade700
+                          : Constants.primaryColor,
                       padding: EdgeInsets.symmetric(
                         vertical: screenHeight * 0.02,
                       ),

@@ -9,6 +9,7 @@ import 'package:merchandiser_clone/screens/manager_screens/api_service/manager_a
 import 'package:merchandiser_clone/screens/marchandiser_screens/create_request_screen.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/murchandiser_report_details_screen.dart';
 import 'package:merchandiser_clone/screens/splash_screen.dart';
+import 'package:merchandiser_clone/utils/constants.dart';
 import 'package:merchandiser_clone/utils/willpop.dart';
 
 class MarchendiserDashboardScreen extends StatefulWidget {
@@ -111,7 +112,8 @@ class _MarchendiserDashboardScreenState
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
-          backgroundColor: Colors.purple,
+          backgroundColor: Constants.primaryColor,
+          // Colors.purple,
           title: const Text(
             "Reports",
             style: TextStyle(fontWeight: FontWeight.w500, color: Colors.white),
@@ -231,11 +233,11 @@ class _MarchendiserDashboardScreenState
                                     child: Text(
                                       _fromDate == null
                                           ? DateFormat(
-                                            'dd/MM/yyyy',
-                                          ).format(DateTime.now()).toString()
+                                              'dd/MM/yyyy',
+                                            ).format(DateTime.now()).toString()
                                           : DateFormat(
-                                            'dd/MM/yyyy',
-                                          ).format(_fromDate),
+                                              'dd/MM/yyyy',
+                                            ).format(_fromDate),
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 15.sp,
@@ -278,11 +280,11 @@ class _MarchendiserDashboardScreenState
                                     child: Text(
                                       _toDate == null
                                           ? DateFormat(
-                                            'dd/MM/yyyy',
-                                          ).format(DateTime.now()).toString()
+                                              'dd/MM/yyyy',
+                                            ).format(DateTime.now()).toString()
                                           : DateFormat(
-                                            'dd/MM/yyyy',
-                                          ).format(_toDate),
+                                              'dd/MM/yyyy',
+                                            ).format(_toDate),
                                       style: TextStyle(
                                         color: Colors.black,
                                         fontSize: 15.sp,
@@ -324,10 +326,9 @@ class _MarchendiserDashboardScreenState
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Color(0xff023e8a)),
-                                  color:
-                                      selectedStatus == Status.request
-                                          ? Colors.purple
-                                          : Colors.white,
+                                  color: selectedStatus == Status.request
+                                      ? Colors.purple
+                                      : Colors.white,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
@@ -338,10 +339,10 @@ class _MarchendiserDashboardScreenState
                                     Text(
                                       "Request",
                                       style: TextStyle(
-                                        color:
-                                            selectedStatus == Status.request
-                                                ? Colors.white
-                                                : Colors.purple,
+                                        color: selectedStatus == Status.request
+                                            ? Colors.white
+                                            : Constants.primaryColor,
+                                        // Colors.purple,
                                       ),
                                     ),
                                     SizedBox(height: 3.h),
@@ -352,10 +353,10 @@ class _MarchendiserDashboardScreenState
                                       style: TextStyle(
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w700,
-                                        color:
-                                            selectedStatus == Status.request
-                                                ? Colors.white
-                                                : Colors.purple,
+                                        color: selectedStatus == Status.request
+                                            ? Colors.white
+                                            : Constants.primaryColor,
+                                        // Colors.purple,
                                       ),
                                     ),
                                   ],
@@ -379,10 +380,10 @@ class _MarchendiserDashboardScreenState
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Color(0xff023e8a)),
-                                  color:
-                                      selectedStatus == Status.pending
-                                          ? Colors.purple
-                                          : Colors.white,
+                                  color: selectedStatus == Status.pending
+                                      ? Constants.primaryColor
+                                      // Colors.purple
+                                      : Colors.white,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
@@ -393,10 +394,10 @@ class _MarchendiserDashboardScreenState
                                     Text(
                                       "Pending",
                                       style: TextStyle(
-                                        color:
-                                            selectedStatus == Status.pending
-                                                ? Colors.white
-                                                : Colors.purple,
+                                        color: selectedStatus == Status.pending
+                                            ? Colors.white
+                                            : Constants.primaryColor,
+                                        // Colors.purple,
                                       ),
                                     ),
                                     SizedBox(height: 3.h),
@@ -407,10 +408,10 @@ class _MarchendiserDashboardScreenState
                                       style: TextStyle(
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w700,
-                                        color:
-                                            selectedStatus == Status.pending
-                                                ? Colors.white
-                                                : Colors.purple,
+                                        color: selectedStatus == Status.pending
+                                            ? Colors.white
+                                            : Constants.primaryColor,
+                                        // Colors.purple,
                                       ),
                                     ),
                                   ],
@@ -434,10 +435,10 @@ class _MarchendiserDashboardScreenState
                               child: Container(
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Color(0xff023e8a)),
-                                  color:
-                                      selectedStatus == Status.rejected
-                                          ? Colors.purple
-                                          : Colors.white,
+                                  color: selectedStatus == Status.rejected
+                                      ? Constants.primaryColor
+                                      // Colors.purple
+                                      : Colors.white,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: Column(
@@ -448,10 +449,10 @@ class _MarchendiserDashboardScreenState
                                     Text(
                                       "Reject",
                                       style: TextStyle(
-                                        color:
-                                            selectedStatus == Status.rejected
-                                                ? Colors.white
-                                                : Colors.purple,
+                                        color: selectedStatus == Status.rejected
+                                            ? Colors.white
+                                            : Constants.primaryColor,
+                                        // Colors.purple,
                                       ),
                                     ),
                                     SizedBox(height: 3.h),
@@ -462,10 +463,10 @@ class _MarchendiserDashboardScreenState
                                       style: TextStyle(
                                         fontSize: 16.sp,
                                         fontWeight: FontWeight.w700,
-                                        color:
-                                            selectedStatus == Status.rejected
-                                                ? Colors.white
-                                                : Colors.purple,
+                                        color: selectedStatus == Status.rejected
+                                            ? Colors.white
+                                            : Constants.primaryColor,
+                                        // Colors.purple,
                                       ),
                                     ),
                                   ],
@@ -482,12 +483,14 @@ class _MarchendiserDashboardScreenState
                       child: Container(
                         height: 50,
                         decoration: BoxDecoration(
-                          color: Colors.purple,
+                          color: Constants.primaryColor,
+                          // Colors.purple,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Center(
                           child: ListTile(
-                            tileColor: Colors.purple,
+                            tileColor: Constants.primaryColor,
+                            // Colors.purple,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                               side: BorderSide(
@@ -547,10 +550,171 @@ class _MarchendiserDashboardScreenState
                     if (selectedStatus == Status.request)
                       reportListData == null || reportListData!.details.isEmpty
                           ? const Expanded(
-                            child: Center(child: Text("No Data")),
-                          )
+                              child: Center(child: Text("No Data")),
+                            )
                           : Expanded(
-                            child: ListView.builder(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: reportListData?.details.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MarchendiserReportDetailsScreen(
+                                            requestId: reportListData!
+                                                .details[index].requestId,
+                                            selectedStatus: selectedStatus,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: flutterMaterial.Card(
+                                      color: Colors.white,
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        dense: true,
+                                        leading: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 10.0,
+                                          ),
+                                          child: Text(
+                                            reportListData
+                                                    ?.details[index].requestId
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Color(0xff023e8a),
+                                            ),
+                                          ),
+                                        ),
+                                        title: Container(
+                                          child: Row(
+                                            children: [
+                                              SizedBox(width: 10),
+                                              Text(
+                                                reportListData
+                                                        ?.details[index].date ??
+                                                    "",
+                                                style: TextStyle(
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xff023e8a),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  reportListData?.details[index]
+                                                          .vendorName ??
+                                                      "",
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xff023e8a),
+                                                  ),
+                                                  maxLines: null,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                    if (selectedStatus == Status.pending)
+                      reportListData!.details.isEmpty
+                          ? const Expanded(
+                              child: Center(child: Text("No Data")),
+                            )
+                          : Expanded(
+                              child: ListView.builder(
+                                shrinkWrap: true,
+                                itemCount: reportListData?.details.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              MarchendiserReportDetailsScreen(
+                                            requestId: reportListData!
+                                                .details[index].requestId,
+                                            selectedStatus: selectedStatus,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: flutterMaterial.Card(
+                                      color: Colors.white,
+                                      child: ListTile(
+                                        contentPadding: EdgeInsets.zero,
+                                        dense: true,
+                                        leading: Padding(
+                                          padding: const EdgeInsets.only(
+                                            left: 10.0,
+                                          ),
+                                          child: Text(
+                                            reportListData
+                                                    ?.details[index].requestId
+                                                    .toString() ??
+                                                "",
+                                            style: TextStyle(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w600,
+                                              color: Color(0xff023e8a),
+                                            ),
+                                          ),
+                                        ),
+                                        title: Container(
+                                          child: Row(
+                                            children: [
+                                              const SizedBox(width: 10),
+                                              Text(
+                                                reportListData
+                                                        ?.details[index].date ??
+                                                    "",
+                                                style: TextStyle(
+                                                  fontSize: 10.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Color(0xff023e8a),
+                                                ),
+                                              ),
+                                              SizedBox(width: 10),
+                                              Expanded(
+                                                child: Text(
+                                                  reportListData?.details[index]
+                                                          .vendorName ??
+                                                      "",
+                                                  style: TextStyle(
+                                                    fontSize: 10.sp,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: Color(0xff023e8a),
+                                                  ),
+                                                  maxLines: null,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                    if (selectedStatus == Status.rejected)
+                      reportListData!.details.isEmpty
+                          ? const Expanded(
+                              child: Center(child: Text("No Data")),
+                            )
+                          : ListView.builder(
                               shrinkWrap: true,
                               itemCount: reportListData?.details.length,
                               itemBuilder: (context, index) {
@@ -558,16 +722,12 @@ class _MarchendiserDashboardScreenState
                                   onTap: () {
                                     Navigator.of(context).push(
                                       MaterialPageRoute(
-                                        builder:
-                                            (context) =>
-                                                MarchendiserReportDetailsScreen(
-                                                  requestId:
-                                                      reportListData!
-                                                          .details[index]
-                                                          .requestId,
-                                                  selectedStatus:
-                                                      selectedStatus,
-                                                ),
+                                        builder: (context) =>
+                                            MarchendiserReportDetailsScreen(
+                                          requestId: reportListData!
+                                              .details[index].requestId,
+                                          selectedStatus: selectedStatus,
+                                        ),
                                       ),
                                     );
                                   },
@@ -582,8 +742,7 @@ class _MarchendiserDashboardScreenState
                                         ),
                                         child: Text(
                                           reportListData
-                                                  ?.details[index]
-                                                  .requestId
+                                                  ?.details[index].requestId
                                                   .toString() ??
                                               "",
                                           style: TextStyle(
@@ -599,8 +758,7 @@ class _MarchendiserDashboardScreenState
                                             SizedBox(width: 10),
                                             Text(
                                               reportListData
-                                                      ?.details[index]
-                                                      .date ??
+                                                      ?.details[index].date ??
                                                   "",
                                               style: TextStyle(
                                                 fontSize: 10.sp,
@@ -611,8 +769,7 @@ class _MarchendiserDashboardScreenState
                                             SizedBox(width: 10),
                                             Expanded(
                                               child: Text(
-                                                reportListData
-                                                        ?.details[index]
+                                                reportListData?.details[index]
                                                         .vendorName ??
                                                     "",
                                                 style: TextStyle(
@@ -631,178 +788,6 @@ class _MarchendiserDashboardScreenState
                                 );
                               },
                             ),
-                          ),
-                    if (selectedStatus == Status.pending)
-                      reportListData!.details.isEmpty
-                          ? const Expanded(
-                            child: Center(child: Text("No Data")),
-                          )
-                          : Expanded(
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: reportListData?.details.length,
-                              itemBuilder: (context, index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                      MaterialPageRoute(
-                                        builder:
-                                            (context) =>
-                                                MarchendiserReportDetailsScreen(
-                                                  requestId:
-                                                      reportListData!
-                                                          .details[index]
-                                                          .requestId,
-                                                  selectedStatus:
-                                                      selectedStatus,
-                                                ),
-                                      ),
-                                    );
-                                  },
-                                  child: flutterMaterial.Card(
-                                    color: Colors.white,
-                                    child: ListTile(
-                                      contentPadding: EdgeInsets.zero,
-                                      dense: true,
-                                      leading: Padding(
-                                        padding: const EdgeInsets.only(
-                                          left: 10.0,
-                                        ),
-                                        child: Text(
-                                          reportListData
-                                                  ?.details[index]
-                                                  .requestId
-                                                  .toString() ??
-                                              "",
-                                          style: TextStyle(
-                                            fontSize: 12.sp,
-                                            fontWeight: FontWeight.w600,
-                                            color: Color(0xff023e8a),
-                                          ),
-                                        ),
-                                      ),
-                                      title: Container(
-                                        child: Row(
-                                          children: [
-                                            const SizedBox(width: 10),
-                                            Text(
-                                              reportListData
-                                                      ?.details[index]
-                                                      .date ??
-                                                  "",
-                                              style: TextStyle(
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: Color(0xff023e8a),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Expanded(
-                                              child: Text(
-                                                reportListData
-                                                        ?.details[index]
-                                                        .vendorName ??
-                                                    "",
-                                                style: TextStyle(
-                                                  fontSize: 10.sp,
-                                                  fontWeight: FontWeight.w600,
-                                                  color: Color(0xff023e8a),
-                                                ),
-                                                maxLines: null,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                    if (selectedStatus == Status.rejected)
-                      reportListData!.details.isEmpty
-                          ? const Expanded(
-                            child: Center(child: Text("No Data")),
-                          )
-                          : ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: reportListData?.details.length,
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder:
-                                          (context) =>
-                                              MarchendiserReportDetailsScreen(
-                                                requestId:
-                                                    reportListData!
-                                                        .details[index]
-                                                        .requestId,
-                                                selectedStatus: selectedStatus,
-                                              ),
-                                    ),
-                                  );
-                                },
-                                child: flutterMaterial.Card(
-                                  color: Colors.white,
-                                  child: ListTile(
-                                    contentPadding: EdgeInsets.zero,
-                                    dense: true,
-                                    leading: Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 10.0,
-                                      ),
-                                      child: Text(
-                                        reportListData?.details[index].requestId
-                                                .toString() ??
-                                            "",
-                                        style: TextStyle(
-                                          fontSize: 10.sp,
-                                          fontWeight: FontWeight.w600,
-                                          color: Color(0xff023e8a),
-                                        ),
-                                      ),
-                                    ),
-                                    title: Container(
-                                      child: Row(
-                                        children: [
-                                          SizedBox(width: 10),
-                                          Text(
-                                            reportListData
-                                                    ?.details[index]
-                                                    .date ??
-                                                "",
-                                            style: TextStyle(
-                                              fontSize: 10.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: Color(0xff023e8a),
-                                            ),
-                                          ),
-                                          SizedBox(width: 10),
-                                          Expanded(
-                                            child: Text(
-                                              reportListData
-                                                      ?.details[index]
-                                                      .vendorName ??
-                                                  "",
-                                              style: TextStyle(
-                                                fontSize: 10.sp,
-                                                fontWeight: FontWeight.w600,
-                                                color: Color(0xff023e8a),
-                                              ),
-                                              maxLines: null,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
                   ],
                 ),
               ),
@@ -815,7 +800,7 @@ class _MarchendiserDashboardScreenState
           child: FloatingActionButton(
             shape: CircleBorder(),
             elevation: 2,
-            backgroundColor: Colors.purple,
+            backgroundColor: Constants.primaryColor,
             onPressed: () {
               Navigator.of(context).push(
                 MaterialPageRoute(builder: (context) => CreateRequestScreen()),
