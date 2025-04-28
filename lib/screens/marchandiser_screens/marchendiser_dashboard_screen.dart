@@ -327,7 +327,7 @@ class _MarchendiserDashboardScreenState
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Color(0xff023e8a)),
                                   color: selectedStatus == Status.request
-                                      ? Colors.purple
+                                      ? Constants.primaryColor
                                       : Colors.white,
                                   borderRadius: BorderRadius.circular(8),
                                 ),
