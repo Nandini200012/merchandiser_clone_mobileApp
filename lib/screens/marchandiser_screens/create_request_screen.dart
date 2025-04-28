@@ -7,6 +7,7 @@ import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_bot
 import 'package:merchandiser_clone/screens/marchandiser_screens/select_salesman_screen.dart';
 import 'package:merchandiser_clone/screens/model/vendor_and_salesperson_model.dart';
 import 'package:merchandiser_clone/screens/splash_screen.dart';
+import 'package:merchandiser_clone/utils/constants.dart';
 import 'package:merchandiser_clone/utils/dynamic_alert_box.dart';
 import 'package:merchandiser_clone/utils/willpop.dart';
 import 'package:provider/provider.dart';
@@ -133,7 +134,8 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
         backgroundColor: Colors.white,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          backgroundColor: Colors.purple,
+          backgroundColor: Constants.primaryColor,
+          // Colors.purple,
           leading: InkWell(
             onTap: () {
               searchController.text = "";
@@ -190,10 +192,9 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                           searchController.text.isNotEmpty
                               ? Icons.close
                               : Icons.search,
-                          color:
-                              searchController.text.isNotEmpty
-                                  ? Colors.red
-                                  : Colors.grey,
+                          color: searchController.text.isNotEmpty
+                              ? Colors.red
+                              : Colors.grey,
                         ),
                         onPressed: () {
                           if (searchController.text.isNotEmpty &&
@@ -261,7 +262,8 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                             child: Row(
                               children: [
                                 CircleAvatar(
-                                  backgroundColor: Colors.purple,
+                                  backgroundColor: Constants.primaryColor,
+                                  // Colors.purple,
                                   child: Text(
                                     vendor.vendorName.isNotEmpty
                                         ? vendor.vendorName[0]

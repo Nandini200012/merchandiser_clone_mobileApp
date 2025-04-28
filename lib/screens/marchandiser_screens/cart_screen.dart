@@ -84,61 +84,60 @@ class _CartScreenState extends State<CartScreen> {
       (item) => item.productName,
     );
 
-    List<Map<String, dynamic>> detailsList =
-        cartProvider.items.map((item) {
-          return {
-            "ItemID": item.itemId,
-            "Barcode": item.productIndex,
-            "Name": item.productName,
-            "Qty": item.quantity.toDouble(),
-            "UomID": item.uomId,
-            "UOM": item.UOM,
-            "Cost": item.Cost,
-            "Date": item.selectedDate.toIso8601String(),
-            "Note": item.note,
-            "Reason": item.reason,
-            "Banding": false,
-            "Discount": false,
-            "Return": false,
-            "Approved": false,
-            "Rejected": false,
-          };
-        }).toList();
+    List<Map<String, dynamic>> detailsList = cartProvider.items.map((item) {
+      return {
+        "ItemID": item.itemId,
+        "Barcode": item.productIndex,
+        "Name": item.productName,
+        "Qty": item.quantity.toDouble(),
+        "UomID": item.uomId,
+        "UOM": item.UOM,
+        "Cost": item.Cost,
+        "Date": item.selectedDate.toIso8601String(),
+        "Note": item.note,
+        "Reason": item.reason,
+        "Banding": false,
+        "Discount": false,
+        "Return": false,
+        "Approved": false,
+        "Rejected": false,
+      };
+    }).toList();
 
     print("List Details :>>>$detailsList");
     void errorPopup(String errorMessage) {
       showDialog(
         barrierDismissible: false,
         context: context,
-        builder:
-            (context) => AlertDialog(
-              title: Column(
-                children: [
-                  Text(
-                    errorMessage,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                  ),
-                ],
+        builder: (context) => AlertDialog(
+          title: Column(
+            children: [
+              Text(
+                errorMessage,
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               ),
-              actions: [
-                Center(
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: Text("Ok"),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          10.0,
-                        ), // Adjust as needed
-                        side: BorderSide(color: Colors.blue, width: 2.0),
-                      ),
-                    ),
+            ],
+          ),
+          actions: [
+            Center(
+              child: TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Ok"),
+                style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      10.0,
+                    ), // Adjust as needed
+                    side: const BorderSide(color: Colors.blue, width: 2.0),
                   ),
                 ),
-              ],
+              ),
             ),
+          ],
+        ),
       );
       print('Error: $errorMessage');
     }
@@ -226,11 +225,11 @@ class _CartScreenState extends State<CartScreen> {
             onPressed: () {
               cartProvider.items.isEmpty
                   ? Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(
-                      builder: (context) => CreateRequestScreen(),
-                    ),
-                    (route) => false,
-                  )
+                      MaterialPageRoute(
+                        builder: (context) => const CreateRequestScreen(),
+                      ),
+                      (route) => false,
+                    )
                   : Navigator.of(context).pop();
             },
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -242,7 +241,7 @@ class _CartScreenState extends State<CartScreen> {
           centerTitle: true,
           actions: [
             Padding(
-              padding: EdgeInsets.only(right: 15),
+              padding: const EdgeInsets.only(right: 15),
               child: GestureDetector(
                 onTap: () {
                   DynamicAlertBox().logOut(
@@ -250,162 +249,161 @@ class _CartScreenState extends State<CartScreen> {
                     "Do you Want to Logout",
                     () {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SplashScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const SplashScreen()),
                       );
                     },
                   );
                 },
-                child: CircleAvatar(radius: 22, child: Text("MR")),
+                child: const CircleAvatar(radius: 22, child: Text("MR")),
               ),
             ),
           ],
         ),
-        body:
-            cartProvider.items.isEmpty
-                ? const Center(
-                  child: Text(
-                    "No Items in Cart",
-                    style: TextStyle(fontSize: 20, color: Colors.grey),
-                  ),
-                )
-                : Column(
-                  children: [
-                    Expanded(
-                      child: ListView.builder(
-                        itemCount: groupedItems.length,
-                        itemBuilder: (context, index) {
-                          String productName = groupedItems.keys.elementAt(
-                            index,
-                          );
-                          String productNameFirstLetter = productName.substring(
-                            0,
-                            1,
-                          );
-                          List<CartDetailsItem> items =
-                              groupedItems[productName]!;
-                          return StickyHeader(
-                            header: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 0.0,
-                              ),
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Color(0xffE9DDFF),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 16.0,
-                                  vertical: 8.0,
-                                ), // Adjust the padding as needed
-                                alignment: Alignment.centerLeft,
-                                child: Row(
-                                  children: [
-                                    CircleAvatar(
-                                      radius: 20, // Adjust the radius as needed
-                                      backgroundColor: Colors.white,
-                                      child: Center(
-                                        child: Text(
-                                          productNameFirstLetter,
-                                          style: TextStyle(
-                                            fontSize: 24,
-                                          ), // Increase font size if needed
-                                        ),
-                                      ),
-                                    ),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            productName,
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.black,
-                                            ),
-                                            maxLines:
-                                                2, // Adjust the number of lines as needed
-                                            overflow:
-                                                TextOverflow
-                                                    .ellipsis, // Adds ellipsis to the text if it overflows
-                                          ),
-                                          Text(
-                                            'Barcode : ${items.first.productIndex.toString()}',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.w500,
-                                              color: Colors.grey,
-                                            ),
-                                            maxLines:
-                                                2, // Adjust the number of lines as needed
-                                            overflow:
-                                                TextOverflow
-                                                    .ellipsis, // Adds ellipsis to the text if it overflows
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+        body: cartProvider.items.isEmpty
+            ? const Center(
+                child: Text(
+                  "No Items in Cart",
+                  style: TextStyle(fontSize: 20, color: Colors.grey),
+                ),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: groupedItems.length,
+                      itemBuilder: (context, index) {
+                        String productName = groupedItems.keys.elementAt(
+                          index,
+                        );
+                        String productNameFirstLetter = productName.substring(
+                          0,
+                          1,
+                        );
+                        List<CartDetailsItem> items =
+                            groupedItems[productName]!;
+                        return StickyHeader(
+                          header: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 0.0,
                             ),
-                            content: Container(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ListTile(
-                                  title: SingleChildScrollView(
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Color(0xffE9DDFF),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16.0,
+                                vertical: 8.0,
+                              ), // Adjust the padding as needed
+                              alignment: Alignment.centerLeft,
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    radius: 20, // Adjust the radius as needed
+                                    backgroundColor: Colors.white,
+                                    child: Center(
+                                      child: Text(
+                                        productNameFirstLetter,
+                                        style: const TextStyle(
+                                          fontSize: 24,
+                                        ), // Increase font size if needed
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  Expanded(
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        for (var item in items)
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    'Qty: ${item.quantity} Pcs',
-                                                  ),
-                                                  Text(
-                                                    'Date: ${DateFormat('dd/MM/yyyy').format(item.selectedDate)}',
-                                                  ),
-                                                  const Divider(),
-                                                ],
-                                              ),
-                                              InkWell(
-                                                onTap: () {
-                                                  _deleteAlert(context, item);
-                                                },
-                                                child: Icon(
-                                                  Icons.delete,
-                                                  color: Colors.purple,
-                                                ),
-                                              ),
-                                            ],
+                                        Text(
+                                          productName,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.black,
                                           ),
+                                          maxLines:
+                                              2, // Adjust the number of lines as needed
+                                          overflow: TextOverflow
+                                              .ellipsis, // Adds ellipsis to the text if it overflows
+                                        ),
+                                        Text(
+                                          'Barcode : ${items.first.productIndex.toString()}',
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: Colors.grey,
+                                          ),
+                                          maxLines:
+                                              2, // Adjust the number of lines as needed
+                                          overflow: TextOverflow
+                                              .ellipsis, // Adds ellipsis to the text if it overflows
+                                        ),
                                       ],
                                     ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          content: Container(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: ListTile(
+                                title: SingleChildScrollView(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      for (var item in items)
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  'Qty: ${item.quantity} Pcs',
+                                                ),
+                                                Text(
+                                                  'Date: ${DateFormat('dd/MM/yyyy').format(item.selectedDate)}',
+                                                ),
+                                                const Divider(),
+                                              ],
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                _deleteAlert(context, item);
+                                              },
+                                              child: const Icon(
+                                                Icons.delete,
+                                                color: Colors.purple,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
+              ),
         bottomNavigationBar: Container(
-          height: 60.0,
-          decoration: BoxDecoration(
+          height: 100.h,
+          decoration: const BoxDecoration(
             border: Border(top: BorderSide(color: Colors.grey)),
           ),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Consumer<CartProvider>(
@@ -413,12 +411,19 @@ class _CartScreenState extends State<CartScreen> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8.0),
                       child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "Total Qty :  ${cartProvider.getCartQuantity().toString()}",
+                            style: const TextStyle(fontWeight: FontWeight.w600),
                           ),
-                          Text("Total Product :  ${groupedItems.length}"),
+                          SizedBox(
+                            height: 2.h,
+                          ),
+                          Text("Total Product :  ${groupedItems.length}",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.w600)),
                         ],
                       ),
                     );
@@ -429,7 +434,10 @@ class _CartScreenState extends State<CartScreen> {
                   width: 150,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [Colors.purple, Colors.purpleAccent],
+                      colors: [
+                        Colors.purple,
+                        Color.fromARGB(255, 224, 124, 245)
+                      ],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
@@ -437,79 +445,78 @@ class _CartScreenState extends State<CartScreen> {
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: InkWell(
-                    onTap:
-                        cartProvider.items.isNotEmpty
-                            ? () {
-                              showDialog(
-                                barrierDismissible: false,
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Center(
-                                      child: Text(
-                                        "Do yo want to save",
-                                        style: TextStyle(fontSize: 14.sp),
-                                      ),
+                    onTap: cartProvider.items.isNotEmpty
+                        ? () {
+                            showDialog(
+                              barrierDismissible: false,
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: Center(
+                                    child: Text(
+                                      "Do you want to save",
+                                      style: TextStyle(fontSize: 14.sp),
                                     ),
-                                    actions: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Consumer<CartProvider>(
-                                            builder: (
-                                              context,
-                                              cartProvider,
-                                              _,
-                                            ) {
-                                              return TextButton(
-                                                style: ButtonStyle(
-                                                  side: MaterialStateProperty.all(
-                                                    BorderSide(
-                                                      color: Colors.blue,
-                                                      width: 2.0,
-                                                    ), // Set the border color and width
-                                                  ),
+                                  ),
+                                  actions: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Consumer<CartProvider>(
+                                          builder: (
+                                            context,
+                                            cartProvider,
+                                            _,
+                                          ) {
+                                            return TextButton(
+                                              style: ButtonStyle(
+                                                side: MaterialStateProperty.all(
+                                                  const BorderSide(
+                                                    color: Colors.blue,
+                                                    width: 2.0,
+                                                  ), // Set the border color and width
                                                 ),
-                                                onPressed:
-                                                    cartProvider
-                                                            .items
-                                                            .isNotEmpty
-                                                        ? () {
+                                              ),
+                                              onPressed:
+                                                  cartProvider.items.isNotEmpty
+                                                      ? () {
                                                           Navigator.of(
                                                             context,
                                                           ).pop();
                                                           sendPostRequest();
                                                         }
-                                                        : null,
-                                                child: Text("Yes"),
-                                              );
-                                            },
-                                          ),
-                                          const SizedBox(width: 15),
-                                          TextButton(
-                                            style: ButtonStyle(
-                                              side: MaterialStateProperty.all(
-                                                BorderSide(
-                                                  color: Colors.blue,
-                                                  width: 2.0,
-                                                ), // Set the border color and width
-                                              ),
+                                                      : null,
+                                              child: const Text("Yes"),
+                                            );
+                                          },
+                                        ),
+                                        const SizedBox(width: 15),
+                                        TextButton(
+                                          style: ButtonStyle(
+                                            side: MaterialStateProperty.all(
+                                              const BorderSide(
+                                                color: Colors.blue,
+                                                width: 2.0,
+                                              ), // Set the border color and width
                                             ),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            },
-                                            child: Text("No"),
                                           ),
-                                        ],
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            }
-                            : null,
-                    child: Center(
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                          child: const Text("No"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          }
+                        : null,
+                    child: const Center(
                       child: Text(
                         "Save Request",
                         style: TextStyle(
@@ -532,60 +539,59 @@ class _CartScreenState extends State<CartScreen> {
   void _deleteAlert(context, CartDetailsItem item) {
     showDialog(
       context: context,
-      builder:
-          (context) => AlertDialog(
-            // title: Container(height: 40,width: 40,child: Image.asset("assets/Delete-Button.png"),),
-            //  Center(
-            //   child: Icon(Icons.warning,color: Colors.red,size: 50,),
-            // ),
-            title: Center(
-              child: Text(
-                "Do you Want to Remove",
-                style: TextStyle(fontSize: 12.sp),
-              ),
-            ),
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Consumer<CartProvider>(
-                    builder: (context, cartProvider, _) {
-                      return TextButton(
-                        style: ButtonStyle(
-                          side: MaterialStateProperty.all(
-                            BorderSide(
-                              color: Colors.blue,
-                              width: 2.0,
-                            ), // Set the border color and width
-                          ),
-                        ),
-                        onPressed: () {
-                          cartProvider.removeFromCart(item);
-                          Navigator.pop(context);
-                        },
-                        child: const Text("Yes"),
-                      );
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  TextButton(
+      builder: (context) => AlertDialog(
+        // title: Container(height: 40,width: 40,child: Image.asset("assets/Delete-Button.png"),),
+        //  Center(
+        //   child: Icon(Icons.warning,color: Colors.red,size: 50,),
+        // ),
+        title: Center(
+          child: Text(
+            "Do you Want to Remove",
+            style: TextStyle(fontSize: 12.sp),
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Consumer<CartProvider>(
+                builder: (context, cartProvider, _) {
+                  return TextButton(
                     style: ButtonStyle(
                       side: MaterialStateProperty.all(
-                        BorderSide(
+                        const BorderSide(
                           color: Colors.blue,
                           width: 2.0,
                         ), // Set the border color and width
                       ),
                     ),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      cartProvider.removeFromCart(item);
+                      Navigator.pop(context);
                     },
-                    child: const Text("No"),
+                    child: const Text("Yes"),
+                  );
+                },
+              ),
+              const SizedBox(width: 10),
+              TextButton(
+                style: ButtonStyle(
+                  side: MaterialStateProperty.all(
+                    const BorderSide(
+                      color: Colors.blue,
+                      width: 2.0,
+                    ), // Set the border color and width
                   ),
-                ],
+                ),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text("No"),
               ),
             ],
           ),
+        ],
+      ),
     );
   }
 
@@ -620,12 +626,13 @@ class _CartScreenState extends State<CartScreen> {
                   onPressed: () {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                        builder: (context) => MarchendiserBottomNavigation(),
+                        builder: (context) =>
+                            const MarchendiserBottomNavigation(),
                       ),
                       (route) => false,
                     );
                   },
-                  child: Text("OK"),
+                  child: const Text("OK"),
                 ),
               ],
             ),

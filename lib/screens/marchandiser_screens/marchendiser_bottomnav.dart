@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/create_request_screen.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_dashboard_screen.dart';
+import 'package:merchandiser_clone/utils/constants.dart';
 
 class MarchendiserBottomNavigation extends StatefulWidget {
   const MarchendiserBottomNavigation({super.key});
@@ -16,7 +17,8 @@ class _MarchendiserBottomNavigationState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.purple,
+      backgroundColor: Constants.primaryColor,
+      //  Colors.purple,
       body: IndexedStack(
         index: currentIndex,
         children: [
