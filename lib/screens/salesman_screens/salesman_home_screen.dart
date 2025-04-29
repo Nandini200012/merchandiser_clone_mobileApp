@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:merchandiser_clone/provider/salesman_request_provider.dart';
 import 'package:merchandiser_clone/screens/salesman_screens/api_service/salesman_api_service.dart';
+import 'package:merchandiser_clone/screens/salesman_screens/model/merchendiser_api_service.dart';
 import 'package:merchandiser_clone/screens/salesman_screens/model/salesman_request_list_model.dart';
 import 'package:merchandiser_clone/screens/salesman_screens/request_details_screen.dart';
 import 'package:merchandiser_clone/screens/splash_screen.dart';
@@ -17,6 +18,7 @@ class SalesmanHomeScreen extends StatefulWidget {
 }
 
 final SalesManApiService apiService = SalesManApiService();
+
 late Future<SalesmanRequestListModel> salesRequestList;
 late Willpop willpop;
 
@@ -150,7 +152,8 @@ class _SalesmanHomeScreenState extends State<SalesmanHomeScreen> {
                                         String selectedVendortId =
                                             datums[index].vendorId.toString();
                                         String selectedProductQuantity =
-                                            datums[index].totalProduct
+                                            datums[index]
+                                                .totalProduct
                                                 .toString();
                                         int requesId = datums[index].requestId;
                                         String productFirstLetter =
@@ -181,8 +184,8 @@ class _SalesmanHomeScreenState extends State<SalesmanHomeScreen> {
                                                   ),
                                                   borderRadius:
                                                       BorderRadius.circular(
-                                                        8.r,
-                                                      ),
+                                                    8.r,
+                                                  ),
                                                 ),
                                                 child: Column(
                                                   children: [
@@ -246,15 +249,15 @@ class _SalesmanHomeScreenState extends State<SalesmanHomeScreen> {
                                                             children: [
                                                               Text(
                                                                 selectedProductQuantity,
-                                                                style: TextStyle(
+                                                                style:
+                                                                    TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                   fontSize:
                                                                       28.sp,
-                                                                  color:
-                                                                      Colors
-                                                                          .brown,
+                                                                  color: Colors
+                                                                      .brown,
                                                                 ),
                                                               ),
                                                               SizedBox(
@@ -262,15 +265,15 @@ class _SalesmanHomeScreenState extends State<SalesmanHomeScreen> {
                                                               ),
                                                               Text(
                                                                 "Products",
-                                                                style: TextStyle(
+                                                                style:
+                                                                    TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                   fontSize:
                                                                       18.sp,
-                                                                  color:
-                                                                      Colors
-                                                                          .grey,
+                                                                  color: Colors
+                                                                      .grey,
                                                                 ),
                                                               ),
                                                             ],
@@ -300,41 +303,45 @@ class _SalesmanHomeScreenState extends State<SalesmanHomeScreen> {
                                                               },
                                                               child: Text(
                                                                 "Details",
-                                                                style: TextStyle(
-                                                                  color:
-                                                                      Colors
-                                                                          .brown,
+                                                                style:
+                                                                    TextStyle(
+                                                                  color: Colors
+                                                                      .brown,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold,
                                                                 ),
                                                               ),
-                                                              style: ButtonStyle(
-                                                                padding: MaterialStateProperty.all(
-                                                                  EdgeInsets.symmetric(
+                                                              style:
+                                                                  ButtonStyle(
+                                                                padding:
+                                                                    MaterialStateProperty
+                                                                        .all(
+                                                                  EdgeInsets
+                                                                      .symmetric(
                                                                     vertical:
                                                                         10.h,
                                                                   ),
                                                                 ),
-                                                                side: MaterialStateProperty.all<
-                                                                  BorderSide
-                                                                >(
+                                                                side: MaterialStateProperty
+                                                                    .all<
+                                                                        BorderSide>(
                                                                   BorderSide(
-                                                                    color:
-                                                                        Colors
-                                                                            .brown,
+                                                                    color: Colors
+                                                                        .brown,
                                                                     width:
                                                                         1.0.w,
                                                                   ),
                                                                 ),
-                                                                shape: MaterialStateProperty.all<
-                                                                  OutlinedBorder
-                                                                >(
+                                                                shape: MaterialStateProperty
+                                                                    .all<
+                                                                        OutlinedBorder>(
                                                                   RoundedRectangleBorder(
                                                                     borderRadius:
-                                                                        BorderRadius.circular(
-                                                                          10.r,
-                                                                        ),
+                                                                        BorderRadius
+                                                                            .circular(
+                                                                      10.r,
+                                                                    ),
                                                                   ),
                                                                 ),
                                                               ),

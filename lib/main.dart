@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:merchandiser_clone/provider/create_request_vendor_detals.dart';
 import 'package:merchandiser_clone/provider/product_details_provider.dart';
 import 'package:merchandiser_clone/provider/provider_cart.dart';
@@ -15,6 +16,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   await WidgetsFlutterBinding.ensureInitialized();
+  // Lock orientation to portrait
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   final cartProvider = CartProvider();
   final createRequestVendorDetails = CreateRequestVendorDetailsProvider();
   runApp(
@@ -26,7 +32,6 @@ void main() async {
         ChangeNotifierProvider(create: (_) => ProductDetailsProvider()),
         ChangeNotifierProvider(create: (_) => SalesManRequestProvider()),
         ChangeNotifierProvider(create: (_) => SelectionProvider()),
-        // ChangeNotifierProvider(create: (_)=>)
         ChangeNotifierProvider.value(value: cartProvider),
         ChangeNotifierProvider.value(value: createRequestVendorDetails),
         ChangeNotifierProvider(create: (_) => SplitProvider()),
@@ -52,12 +57,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            scaffoldBackgroundColor: Colors.transparent,
-            // appBarTheme: AppBarTheme(
-            //   elevation: 0,
-            //   backgroundColor: Colors.blue,
-            //   scrolledUnderElevation: 0,
-            // ),
+            scaffoldBackgroundColor: Colors.grey.shade200,
             useMaterial3: true,
           ),
           builder: EasyLoading.init(),

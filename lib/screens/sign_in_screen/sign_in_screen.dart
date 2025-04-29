@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:merchandiser_clone/screens/manager_screens/manager_bottom_navbar.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_bottomnav.dart';
+import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_dashboard_screen.dart';
 import 'package:merchandiser_clone/screens/salesman_screens/salesman_bottom_navbar.dart';
 import 'package:merchandiser_clone/utils/SharedPreferencesUtil.dart';
 import 'package:merchandiser_clone/utils/constants.dart';
@@ -111,24 +112,25 @@ class _SignInScreenState extends State<SignInScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const MarchendiserBottomNavigation(),
+            builder: (context) => const MarchendiserDashboardScreen(),
+            // const MarchendiserBottomNavigation(),
           ),
         );
         break;
-      case "SalesMan":
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const SalesManBottomNavBar()),
-        );
-        break;
-      case "Manager":
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const ManagerBottomNavBar()),
-        );
-        break;
+      // case "SalesMan":
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const SalesManBottomNavBar()),
+      //   );
+      //   break;
+      // case "Manager":
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => const ManagerBottomNavBar()),
+      //   );
+      //   break;
       default:
-        _showErrorDialog('Invalid role.');
+        _showErrorDialog('Invalid login credentials!');
         break;
     }
   }
@@ -171,6 +173,7 @@ class _SignInScreenState extends State<SignInScreen> {
     final paddingVertical = screenHeight * 0.05; // 5% of the screen height
 
     return Scaffold(
+      resizeToAvoidBottomInset: true,
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
@@ -202,7 +205,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             Container(
                               height: screenHeight * 0.47,
                               width: double.infinity,
-                              color: const Color.fromARGB(255, 221, 138, 237),
+                              color: Constants.primaryColor,
                             ),
                             Positioned(
                               top: screenHeight * .26,
@@ -211,7 +214,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    'Merchandizer',
+                                    'Merchandiser',
                                     style: GoogleFonts.roboto(
                                         color: Colors.white,
                                         fontSize: 14.sp,
@@ -298,7 +301,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               Row(
                                 children: [
                                   Checkbox(
-                                    activeColor: Colors.purple,
+                                    activeColor: Colors.purple.shade300,
                                     value: rememberMe,
                                     onChanged: (value) {
                                       setState(() {
@@ -326,7 +329,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                       gradient: const LinearGradient(
                                         colors: [
                                           Colors.purple,
-                                          Color.fromARGB(255, 221, 145, 237),
+                                          Colors.purple,
                                         ],
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,

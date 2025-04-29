@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:merchandiser_clone/provider/create_request_vendor_detals.dart';
 import 'package:merchandiser_clone/provider/salesperson_provider.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/add_product_list_screen.dart';
@@ -310,47 +311,102 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 15.h,
+                  ),
+                  Material(
+                    elevation: 2,
+                    borderRadius: BorderRadius.circular(8),
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                            colors: [Colors.purple, Constants.primaryColor]),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          surfaceTintColor: Colors.transparent,
+                        ),
+                        onPressed: () {
+                          if (selectedSalesManName.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                backgroundColor: Colors.red,
+                                content: const Center(
+                                  child: Text('Please choose a sales person'),
+                                ),
+                                behavior: SnackBarBehavior.floating,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                            );
+                          } else {
+                            salesPersonDetailsProvider.setSalesPersonDetails(
+                              selectedSalesManName,
+                              selectedSalesPersonId!,
+                              _remarksController.text,
+                            );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    AddProductListViewScreen(),
+                              ),
+                            );
+                          }
+                        },
+                        child: Text(
+                          'Next',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        floatingActionButton: FloatingActionButton(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          backgroundColor: Constants.primaryColor,
-          // Colors.purple,
-          onPressed: () {
-            if (selectedSalesManName.isEmpty) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  backgroundColor: Colors.red,
-                  content: const Center(
-                    child: Text('Please choose a sales person'),
-                  ),
-                  behavior: SnackBarBehavior.floating,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              );
-            } else {
-              salesPersonDetailsProvider.setSalesPersonDetails(
-                selectedSalesManName,
-                selectedSalesPersonId!,
-                _remarksController.text,
-              );
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => AddProductListViewScreen(),
-                ),
-              );
-            }
-          },
-          child: Icon(Icons.arrow_forward_ios, color: Colors.white),
-        ),
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        // floatingActionButton: FloatingActionButton(
+        //   shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.circular(10),
+        //   ),
+        //   backgroundColor: Constants.primaryColor,
+        //   // Colors.purple,
+        //   onPressed: () {
+        // if (selectedSalesManName.isEmpty) {
+        //   ScaffoldMessenger.of(context).showSnackBar(
+        //     SnackBar(
+        //       backgroundColor: Colors.red,
+        //       content: const Center(
+        //         child: Text('Please choose a sales person'),
+        //       ),
+        //       behavior: SnackBarBehavior.floating,
+        //       shape: RoundedRectangleBorder(
+        //         borderRadius: BorderRadius.circular(20),
+        //       ),
+        //     ),
+        //   );
+        // } else {
+        //   salesPersonDetailsProvider.setSalesPersonDetails(
+        //     selectedSalesManName,
+        //     selectedSalesPersonId!,
+        //     _remarksController.text,
+        //   );
+        //   Navigator.of(context).push(
+        //     MaterialPageRoute(
+        //       builder: (context) => AddProductListViewScreen(),
+        //     ),
+        //   );
+        // }
+        //   },
+        //   child: Icon(Icons.arrow_forward_ios, color: Colors.white),
+        // ),
       ),
     );
   }

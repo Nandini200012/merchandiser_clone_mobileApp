@@ -109,6 +109,7 @@ class _MarchendiserDashboardScreenState
         return willpop.onWillPop();
       },
       child: Scaffold(
+        backgroundColor: Colors.grey.shade200,
         appBar: AppBar(
           elevation: 0,
           automaticallyImplyLeading: false,
@@ -189,20 +190,21 @@ class _MarchendiserDashboardScreenState
         ),
         body: Container(
           width: double.infinity,
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Colors.white,
-                Colors.white,
-                Colors.white,
-                Colors.white,
-                Colors.white,
-                Colors.white,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
-            ),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            // gradient: LinearGradient(
+            //   colors: [
+            //     Colors.white,
+            //     Colors.white,
+            //     Colors.white,
+            //     Colors.white,
+            //     Colors.white,
+            //     Colors.white,
+            //   ],
+            //   begin: Alignment.topCenter,
+            //   end: Alignment.bottomCenter,
+            //   stops: [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+            // ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(10.0),
