@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:merchandiser_clone/provider/create_request_vendor_detals.dart';
+import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_dashboard_screen.dart';
 import 'package:merchandiser_clone/screens/model/Vendors.dart';
 import 'package:merchandiser_clone/screens/salesman_screens/model/merchendiser_api_service.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_bottomnav.dart';
@@ -131,7 +132,7 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
         return willpop.onWillPop();
       },
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.grey.shade200,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Constants.primaryColor,
@@ -141,7 +142,7 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
               searchController.text = "";
               Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => const MarchendiserBottomNavigation(),
+                  builder: (context) => const MarchendiserDashboardScreen(),
                 ),
               );
             },
@@ -230,11 +231,11 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                           onTap: () {
                             searchController.text = "";
                             vendorDetailsProvider.setVendorDetails(
-                              vendor.vendorId,
-                              vendor.vendorName,
-                              vendor.salesPerson,
-                              vendor.salesPersonName,
-                            );
+                                vendor.vendorId,
+                                vendor.vendorName,
+                                vendor.salesPerson,
+                                vendor.salesPersonName,
+                                vendor.mobileNo);
                             Navigator.of(context).push(
                               MaterialPageRoute(
                                 builder: (context) => SelectSalesmanScreen(),

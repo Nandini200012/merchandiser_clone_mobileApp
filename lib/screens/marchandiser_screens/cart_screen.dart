@@ -8,9 +8,11 @@ import 'package:merchandiser_clone/provider/cart_provider.dart';
 import 'package:merchandiser_clone/provider/create_request_vendor_detals.dart';
 import 'package:merchandiser_clone/provider/product_details_provider.dart';
 import 'package:merchandiser_clone/provider/salesperson_provider.dart';
+import 'package:merchandiser_clone/screens/common_widget/alert_popup.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/cart_details_screen.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/create_request_screen.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_bottomnav.dart';
+import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_dashboard_screen.dart';
 import 'package:merchandiser_clone/screens/splash_screen.dart';
 import 'package:merchandiser_clone/utils/SharedPreferencesUtil.dart';
 import 'package:merchandiser_clone/utils/constants.dart';
@@ -91,8 +93,8 @@ class _CartScreenState extends State<CartScreen> {
         "Name": item.productName,
         "Qty": item.quantity.toDouble(),
         "UomID": item.uomId,
-        "UOM": item.UOM,
-        "Cost": item.Cost,
+        "UOM": item.uom,
+        "Cost": item.cost,
         "Date": item.selectedDate.toIso8601String(),
         "Note": item.note,
         "Reason": item.reason,
@@ -221,6 +223,49 @@ class _CartScreenState extends State<CartScreen> {
         appBar: AppBar(
           backgroundColor: Colors.white,
           automaticallyImplyLeading: false,
+          // leading: IconButton(
+          //   icon: const Icon(Icons.arrow_back),
+          //   onPressed: () {
+          //     if (cartProvider.items.isEmpty) {
+          //       Navigator.of(context).pushAndRemoveUntil(
+          //         MaterialPageRoute(
+          //           builder: (context) => const CreateRequestScreen(),
+          //         ),
+          //         (route) => false,
+          //       );
+          //     } else {
+          //       showDialog(
+          //         context: context,
+          //         builder: (context) => AlertDialog(
+          //           title: const Text('Unsaved Changes'),
+          //           content: const Text(
+          //             'Going back without saving may lead to loss of data.\nPlease save your changes.',
+          //           ),
+          //           actions: [
+          //             TextButton(
+          //               onPressed: () =>
+          //                   Navigator.of(context).pop(), // Just close dialog
+          //               child: const Text('Cancel'),
+          //             ),
+          //             TextButton(
+          //               onPressed: () {
+          //                 Navigator.of(context).pop(); // Close dialog
+          //                 Navigator.of(context).pushAndRemoveUntil(
+          //                   MaterialPageRoute(
+          //                     builder: (context) => const CreateRequestScreen(),
+          //                   ),
+          //                   (route) => false,
+          //                 );
+          //               },
+          //               child: const Text('Leave'),
+          //             ),
+          //           ],
+          //         ),
+          //       );
+          //     }
+          //   },
+          // ),
+
           leading: IconButton(
             onPressed: () {
               cartProvider.items.isEmpty
@@ -328,7 +373,7 @@ class _CartScreenState extends State<CartScreen> {
                                               .ellipsis, // Adds ellipsis to the text if it overflows
                                         ),
                                         Text(
-                                          'Barcode : ${items.first.productIndex.toString()}',
+                                          'Barcode : ${items.first.barcode.toString()}',
                                           style: const TextStyle(
                                             fontWeight: FontWeight.w500,
                                             color: Colors.grey,
@@ -434,10 +479,7 @@ class _CartScreenState extends State<CartScreen> {
                   width: 150,
                   decoration: BoxDecoration(
                     gradient: const LinearGradient(
-                      colors: [
-                        Colors.purple,
-                        Color.fromARGB(255, 224, 124, 245)
-                      ],
+                      colors: [Colors.purple, Colors.purple],
                       begin: Alignment.centerLeft,
                       end: Alignment.centerRight,
                     ),
@@ -627,7 +669,7 @@ class _CartScreenState extends State<CartScreen> {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
                         builder: (context) =>
-                            const MarchendiserBottomNavigation(),
+                            const MarchendiserDashboardScreen(),
                       ),
                       (route) => false,
                     );
