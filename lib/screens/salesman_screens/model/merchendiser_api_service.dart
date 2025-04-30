@@ -27,7 +27,7 @@ class MerchendiserApiService {
           'FilteText': query,
         },
       );
-
+      log("url : ${Urls.getVendors}  PageNo: ${page.toString()} PageSize: ${pageSize.toString()} FilteText: ${query}");
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         // log("url : ${Urls.getVendors} Response:>>>$data");
@@ -117,6 +117,7 @@ class MerchendiserApiService {
     try {
       EasyLoading.show();
       final response = await http.get(apiUrl, headers: headers);
+      log('category response : ${response.body}');
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         final productAndCategoreisModel = ProductAndCategoriesModel.fromJson(

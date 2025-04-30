@@ -425,7 +425,7 @@ class _CartScreenState extends State<CartScreen> {
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  'Qty: ${item.quantity} Pcs',
+                                                  'Qty: ${item.quantity} ${item.uom}',
                                                 ),
                                                 Text(
                                                   'Date: ${DateFormat('dd/MM/yyyy').format(item.selectedDate)}',
