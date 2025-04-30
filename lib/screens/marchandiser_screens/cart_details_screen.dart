@@ -117,29 +117,6 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       );
       productdetailsprovider.setSelectedVendor(
           vendorDetailsProvider.getVendor(), context);
-      _fetchSalesmanData(vendorDetailsProvider.vendorId);
-    });
-  }
-
-  void _fetchSalesmanData(int? vendorID) {
-    salesmanData = salesmanapiService.getVendorAndSalesPersonData(vendorID);
-    salesmanData.then((data) {
-      setState(() {
-        _allSalesPersons = data.data.salesPersons;
-        _filteredSalesPersons = _allSalesPersons;
-        // Set initial selected sales person
-        var vendorDetailsProvider =
-            Provider.of<CreateRequestVendorDetailsProvider>(
-          context,
-          listen: false,
-        );
-        log("all Sales man length: ${_allSalesPersons.length}");
-        selectedSalesManName = vendorDetailsProvider.salesPersonName ??
-            _allSalesPersons.first.salesPersonName;
-        selectedSalesPersonId = vendorDetailsProvider.salesPerson ??
-            _allSalesPersons.first.salesPerson;
-        selectedCustomer = selectedSalesManName;
-      });
     });
   }
 
@@ -1196,7 +1173,9 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                     value: "PROMO RETURNS", child: Text("Promo Returns")),
                 DropdownMenuItem(value: "Other", child: Text("Other")),
               ],
-              onChanged: _selectedReason == "EXPIRED GOODS"
+              onChanged: (
+                      // _selectedReason == "EXPIRED GOODS" ||
+                      _quantityController.text.isEmpty || _selectedDate == null)
                   ? null
                   : (value) {
                       setState(() {
@@ -1204,6 +1183,15 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         _showReasonText = value == "Other";
                       });
                     },
+
+              // onChanged: _selectedReason == "EXPIRED GOODS"
+              //     ? null
+              //     : (value) {
+              //         setState(() {
+              //           _selectedReason = value;
+              //           _showReasonText = value == "Other";
+              //         });
+              //       },
             ),
           ),
         ),
