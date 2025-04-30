@@ -474,6 +474,7 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                           onPressed: () {
                             Navigator.of(context).pop();
                             Navigator.of(context).pop(); // Close dialog
+                            cartProvider.clearCart();
                             // Navigator.of(context).pushAndRemoveUntil(
                             //   MaterialPageRoute(
                             //     builder: (context) =>
@@ -514,7 +515,11 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                       },
                     );
                   },
-                  child: const CircleAvatar(radius: 22, child: Text("MR")),
+                  child: const CircleAvatar(
+                    radius: 22,
+                    child: Text("MR"),
+                    backgroundColor: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -604,7 +609,7 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                                       prefixIcon: IconButton(
                                         icon: Icon(
                                           Icons.search,
-                                          color: Colors.purple,
+                                          color: Constants.primaryColor,
                                           size: MediaQuery.of(
                                                 context,
                                               ).size.width *
@@ -777,11 +782,12 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                         width: double.infinity,
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          gradient: const LinearGradient(
-                            colors: [Colors.purple, Constants.primaryColor],
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                          ),
+                          color: Constants.buttonColor,
+                          // gradient: const LinearGradient(
+                          //   colors: [Colors.purple, Constants.primaryColor],
+                          //   begin: Alignment.centerLeft,
+                          //   end: Alignment.centerRight,
+                          // ),
                         ),
                         child: ElevatedButton(
                           onPressed: () {

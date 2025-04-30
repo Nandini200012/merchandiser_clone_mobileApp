@@ -4,7 +4,6 @@ import 'package:merchandiser_clone/provider/create_request_vendor_detals.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_dashboard_screen.dart';
 import 'package:merchandiser_clone/screens/model/Vendors.dart';
 import 'package:merchandiser_clone/screens/salesman_screens/model/merchendiser_api_service.dart';
-import 'package:merchandiser_clone/screens/marchandiser_screens/marchendiser_bottomnav.dart';
 import 'package:merchandiser_clone/screens/marchandiser_screens/select_salesman_screen.dart';
 import 'package:merchandiser_clone/screens/model/vendor_and_salesperson_model.dart';
 import 'package:merchandiser_clone/screens/splash_screen.dart';
@@ -163,12 +162,17 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                     "Do you Want to Logout",
                     () {
                       Navigator.of(context).pushReplacement(
-                        MaterialPageRoute(builder: (context) => SplashScreen()),
+                        MaterialPageRoute(
+                            builder: (context) => const SplashScreen()),
                       );
                     },
                   );
                 },
-                child: CircleAvatar(radius: 22, child: Text("MR")),
+                child: CircleAvatar(
+                  radius: 22,
+                  child: Text("MR"),
+                  backgroundColor: Colors.white,
+                ),
               ),
             ),
           ],
@@ -223,8 +227,8 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                       itemBuilder: (context, index) {
                         if (index == vendorList.length) {
                           return isLoading
-                              ? Center(child: CircularProgressIndicator())
-                              : SizedBox.shrink();
+                              ? const Center(child: CircularProgressIndicator())
+                              : const SizedBox.shrink();
                         }
                         final vendor = vendorList[index];
                         return GestureDetector(
@@ -238,7 +242,8 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                                 vendor.mobileNo);
                             Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (context) => SelectSalesmanScreen(),
+                                builder: (context) =>
+                                    const SelectSalesmanScreen(),
                               ),
                             );
                           },
@@ -256,7 +261,7 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                                   color: Colors.grey.withOpacity(0.2),
                                   spreadRadius: 2,
                                   blurRadius: 5,
-                                  offset: Offset(0, 3),
+                                  offset: const Offset(0, 3),
                                 ),
                               ],
                             ),
@@ -269,7 +274,7 @@ class _CreateRequestScreenState extends State<CreateRequestScreen> {
                                     vendor.vendorName.isNotEmpty
                                         ? vendor.vendorName[0]
                                         : '',
-                                    style: TextStyle(color: Colors.white),
+                                    style: const TextStyle(color: Colors.white),
                                   ),
                                 ),
                                 const SizedBox(width: 15),
