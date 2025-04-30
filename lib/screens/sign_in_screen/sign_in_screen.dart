@@ -203,12 +203,12 @@ class _SignInScreenState extends State<SignInScreen> {
                         Stack(
                           children: [
                             Container(
-                              height: screenHeight * 0.47,
+                              height: screenHeight * 0.3,
                               width: double.infinity,
                               color: Constants.primaryColor,
                             ),
                             Positioned(
-                              top: screenHeight * .26,
+                              top: screenHeight * .16,
                               left: screenWidth * .02,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -301,7 +301,8 @@ class _SignInScreenState extends State<SignInScreen> {
                               Row(
                                 children: [
                                   Checkbox(
-                                    activeColor: Colors.purple.shade300,
+                                    activeColor: Constants.primaryColor,
+                                    // Colors.purple.shade300,
                                     value: rememberMe,
                                     onChanged: (value) {
                                       setState(() {
@@ -325,16 +326,17 @@ class _SignInScreenState extends State<SignInScreen> {
                                   child: Container(
                                     height: 52,
                                     decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(10),
-                                      gradient: const LinearGradient(
-                                        colors: [
-                                          Colors.purple,
-                                          Colors.purple,
-                                        ],
-                                        begin: Alignment.topCenter,
-                                        end: Alignment.bottomCenter,
-                                      ),
-                                    ),
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Constants.buttonColor
+                                        // gradient: const LinearGradient(
+                                        //   colors: [
+                                        //     Colors.purple,
+                                        //     Colors.purple,
+                                        //   ],
+                                        //   begin: Alignment.topCenter,
+                                        //   end: Alignment.bottomCenter,
+                                        // ),
+                                        ),
                                     child: ElevatedButton(
                                       onPressed: _signIn,
                                       style: ElevatedButton.styleFrom(

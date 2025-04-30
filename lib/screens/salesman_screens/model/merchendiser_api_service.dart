@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:http/http.dart' as http;
@@ -29,6 +30,7 @@ class MerchendiserApiService {
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+        // log("url : ${Urls.getVendors} Response:>>>$data");
         if (data['isSuccess']) {
           return (data['data'] as List)
               .map((json) => Vendors.fromJson(json))
@@ -72,11 +74,11 @@ class MerchendiserApiService {
 
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
-        print("Response:>>>$jsonResponse");
+        print(" sales person url : $apiUrl Response:>>>$jsonResponse");
         final vendorAndSalesPersonModel = VendorAndSalesPersonModel.fromJson(
           jsonResponse,
         );
-
+        log(" Response data:>>>${vendorAndSalesPersonModel.data.salesPersons.length}");
         return vendorAndSalesPersonModel;
       } else {
         throw Exception('Failed to fetch data');

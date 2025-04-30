@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_string_interpolations
 
 import 'dart:convert';
+import 'dart:developer';
 import 'package:dynamic_height_grid_view/dynamic_height_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,7 +13,6 @@ import 'package:merchandiser_clone/screens/common_widget/toast.dart';
 import 'package:merchandiser_clone/screens/model/Vendors.dart';
 import 'package:merchandiser_clone/screens/model/vendor_and_salesperson_model.dart';
 import 'package:merchandiser_clone/screens/salesman_screens/model/merchendiser_api_service.dart';
-import 'package:merchandiser_clone/screens/salesman_screens/salesman_home_screen.dart';
 import 'package:merchandiser_clone/utils/constants.dart';
 import 'package:merchandiser_clone/utils/urls.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +33,7 @@ class CartDetailsItem {
   final String reason;
   final dynamic itemId;
   final dynamic uomId;
-  final dynamic uom;
+  dynamic uom;
   final dynamic cost;
   final dynamic barcode;
 
@@ -96,13 +96,14 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
   String selectedSalesManName = "";
   int? selectedSalesPersonId;
   // Vendors? selectedVendor;
+  String selectedUOM = "";
   late Future<VendorAndSalesPersonModel> salesmanData;
   @override
   void initState() {
     super.initState();
     willpop = Willpop(context);
     _fetchLastSalesPrice();
-    ;
+
     fetchVendors();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       var vendorDetailsProvider =
@@ -132,6 +133,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           context,
           listen: false,
         );
+        log("all Sales man length: ${_allSalesPersons.length}");
         selectedSalesManName = vendorDetailsProvider.salesPersonName ??
             _allSalesPersons.first.salesPersonName;
         selectedSalesPersonId = vendorDetailsProvider.salesPerson ??
@@ -299,9 +301,12 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
   void _addToCart() {
     final cartProvider = Provider.of<CartProvider>(context, listen: false);
     for (final item in itemList) {
+      if (selectedUOM.isNotEmpty) {
+        item.uom = selectedUOM;
+      }
       cartProvider.addToCart(item);
     }
-    showTopToast('Item added to cart');
+    showTopToast('Item added to bin');
   }
 
   // Show add-to-cart confirmation dialog
@@ -312,7 +317,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text(
-            "Do you want to add to cart?",
+            "Do you want to add to bin?",
             style: GoogleFonts.poppins(fontSize: screenWidth * 0.045),
           ),
           actions: [
@@ -380,18 +385,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       ),
     );
   }
-// vendorDetailsProvider.setVendorDetails(
-//                               vendor.vendorId,
-//                               vendor.vendorName,
-//                               vendor.salesPerson,
-//                               vendor.salesPersonName,
-//                             );
 
-//                              salesPersonDetailsProvider.setSalesPersonDetails(
-//                               selectedSalesManName,
-//                               selectedSalesPersonId!,
-//                               _remarksController.text,
-//                             );
   // Build AppBar
   AppBar _buildAppBar(BuildContext context, double screenWidth) {
     return AppBar(
@@ -435,13 +429,13 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         ),
       ],
       flexibleSpace: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.purple, Constants.primaryColor],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: const BoxDecoration(color: Constants.primaryColor
+            // gradient: LinearGradient(
+            //   colors: [Constants.primaryColor],
+            //   begin: Alignment.topCenter,
+            //   end: Alignment.bottomCenter,
+            // ),
+            ),
       ),
     );
   }
@@ -462,7 +456,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           children: [
             _buildProductCard(screenWidth, screenHeight, productDetailsProvider,
                 vendorDetailsProvider, salesPersonDetailsProvider),
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.001),
             _buildAddedItemsSection(
                 screenWidth, screenHeight, productDetailsProvider),
             SizedBox(height: screenHeight * 0.02),
@@ -480,6 +474,130 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> showAlternativeUnits(
+    BuildContext context,
+    dynamic itemID,
+  ) async {
+    try {
+      List<dynamic> data = await vendorapiService.fetchAlternativeUnits(itemID);
+      showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20.0)),
+        ),
+        backgroundColor: Colors.white,
+        builder: (context) {
+          return FractionallySizedBox(
+            heightFactor: 0.9, // Adjust the height as needed
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(16.0),
+                    child: Text(
+                      'Alternative Units',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const Divider(thickness: 1.0),
+                  data.isEmpty
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: 50.h,
+                            ),
+                            Text(
+                              'No data found!',
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: ListView.builder(
+                            shrinkWrap:
+                                true, // Ensure ListView takes minimal space
+                            physics:
+                                const NeverScrollableScrollPhysics(), // Disable scrolling in ListView
+                            itemCount: data.length,
+                            itemBuilder: (context, itemIndex) {
+                              var item = data[itemIndex];
+                              return Card(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                ),
+                                elevation: 3,
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.all(16.0),
+                                  title: Text(
+                                    item['productName'],
+                                    style: const TextStyle(
+                                      fontSize: 16.0,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 8.0),
+                                      Text(
+                                        'Barcode : ${item['productId']}',
+                                        style:
+                                            TextStyle(color: Colors.grey[700]),
+                                      ),
+                                      Text(
+                                        'UOM : ${item['UOM']}',
+                                        style: const TextStyle(
+                                            color: Colors.green),
+                                      ),
+                                      Text(
+                                        'Price : ${item['Cost'].toStringAsFixed(2)}',
+                                        style:
+                                            TextStyle(color: Colors.grey[700]),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      // selectedProductName = item['productName'];
+                                      // selectedProductId = item['productId'];
+                                      selectedUOM = item['UOM'];
+                                      // selectedUOMId = item['UOMId'];
+                                      // selectedCost = item['Cost'];
+                                      // selectedItemID = item['ItemID'];
+                                      // selectedbarcode = item['Barcode'];
+                                      // infoButtonClickedIndex = index;
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                ],
+              ),
+            ),
+          );
+        },
+      );
+    } catch (error) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.toString())));
+    }
   }
 
   // Product Details Card
@@ -509,165 +627,180 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           // SizedBox(height: screenHeight * 0.01),
-                          Text(
-                            'Customer :   ${productDetailsProvider.selectedVendor == null ? vendorDetailsProvider.vendorName : productDetailsProvider.selectedVendor!.vendorName ?? 'Unknown'}',
-                            style: GoogleFonts.poppins(
-                              fontSize: screenWidth * 0.035,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.black,
-                            ),
+                          Row(
+                            children: [
+                              Text(
+                                'Customer : ',
+                                style: GoogleFonts.poppins(
+                                  fontSize: screenWidth * 0.035,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                  // decoration: TextDecoration.underline,
+                                  // decorationColor: Colors.blue, // Underline color
+                                  // decorationThickness: 2,
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showVendorSelectionSheet(
+                                      context,
+                                      productDetailsProvider,
+                                      vendorDetailsProvider,
+                                      salesPersonDetailsProvider);
+                                },
+                                child: SizedBox(
+                                  width: screenWidth * .6,
+                                  child: Text(
+                                    '${productDetailsProvider.selectedVendor == null ? vendorDetailsProvider.vendorName : productDetailsProvider.selectedVendor!.vendorName ?? 'Unknown'}',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: screenWidth * 0.035,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor:
+                                          Colors.blue, // Underline color
+                                      decorationThickness: 2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
-                          // SizedBox(height: 4.h),
-                          // SizedBox(
-                          //   width: screenWidth * 0.2,
-                          //   child: Text(
-                          //     '${productDetailsProvider.selectedVendor == null ? vendorDetailsProvider.vendorName : productDetailsProvider.selectedVendor!.vendorName ?? 'Unknown'}',
-                          //     style: GoogleFonts.poppins(
-                          //       fontSize: screenWidth * 0.035,
-                          //       fontWeight: FontWeight.w600,
-                          //       color: Colors.grey[900],
-                          //     ),
-                          //     overflow: TextOverflow.ellipsis,
-                          //   ),
-                          // ),
+
                           SizedBox(height: 2.h),
                           Text(
-                            'Sales person:  ${salesPersonDetailsProvider.salesManName ?? "Unknown"}',
+                            selectedSalesManName.isEmpty
+                                ? 'Sales person:  ${salesPersonDetailsProvider.salesManName ?? "Unknown"}'
+                                : 'Sales person:  ${selectedSalesManName}',
                             style: GoogleFonts.poppins(
                               fontSize: screenWidth * 0.035,
                               fontWeight: FontWeight.w700,
                               color: Colors.black,
                             ),
                           ),
-                          // SizedBox(height: 4.h),
-                          // Text(
-                          //   '${salesPersonDetailsProvider.salesManName ?? "Unknown"}',
-                          //   style: GoogleFonts.poppins(
-                          //     fontSize: screenWidth * 0.035,
-                          //     fontWeight: FontWeight.w600,
-                          //     color: Colors.grey[900],
-                          //   ),
-                          // ),
                         ],
                       ),
-                      // const Spacer(),
-                      // IconButton(
-                      //     onPressed: () {
-                      //       showVendorSelectionSheet(
-                      //           context, productDetailsProvider);
-                      //     },
-                      //     icon: const Icon(Icons.arrow_drop_down))
                     ],
                   ),
                 ),
               ),
             ),
-            // Spacer(),
-            // Card(
-            //   shape: RoundedRectangleBorder(
-            //     side: BorderSide(width: 0.4, color: Colors.grey.shade200),
-            //     borderRadius: BorderRadius.circular(12),
-            //   ),
-            //   elevation: 0.4,
-            //   child: Padding(
-            //     padding: EdgeInsets.all(screenWidth * 0.04),
-            //     child: Container(
-            //       width: screenWidth * 0.34,
-            //       child: Row(
-            //         children: [
-            //           Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               Text(
-            //                 'Sales man',
-            //                 style: GoogleFonts.poppins(
-            //                   fontSize: screenWidth * 0.035,
-            //                   fontWeight: FontWeight.w700,
-            //                   color: Colors.green,
-            //                 ),
-            //               ),
-            //               SizedBox(height: 4.h),
-            //               Text(
-            //                 '${salesPersonDetailsProvider.salesManName ?? "Unknown"}',
-            //                 style: GoogleFonts.poppins(
-            //                   fontSize: screenWidth * 0.035,
-            //                   fontWeight: FontWeight.w600,
-            //                   color: Colors.grey[900],
-            //                 ),
-            //               ),
-            //             ],
-            //           ),
-            //           const Spacer(),
-            //           IconButton(
-            //             onPressed: () {},
-            //             icon: const Icon(Icons.arrow_drop_down),
-            //           )
-            //         ],
-            //       ),
-            //     ),
-            //   ),
-            // ),
           ],
         ),
-        Card(
-          shape: RoundedRectangleBorder(
-            side: BorderSide(width: 0.4, color: Colors.grey.shade200),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          elevation: 0.4,
-          child: Padding(
-            padding: EdgeInsets.all(screenWidth * 0.024),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  productDetailsProvider.productName ?? "Unknown Product",
-                  style: GoogleFonts.poppins(
-                    fontSize: screenWidth * 0.037,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.grey.shade800,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-                SizedBox(height: screenHeight * 0.01),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'BarCode: ${productDetailsProvider.barcode ?? "N/A"}',
-                          style: GoogleFonts.poppins(
-                            fontSize: screenWidth * 0.035,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.005),
-                        Text(
-                          'UOM: ${productDetailsProvider.UOM ?? "N/A"}',
-                          style: GoogleFonts.poppins(
-                            fontSize: screenWidth * 0.035,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.005),
-                        Text(
-                          'Price: ${productDetailsProvider.Cost != null ? productDetailsProvider.Cost.toStringAsFixed(3) : "0.000"}',
-                          style: GoogleFonts.poppins(
-                            fontSize: screenWidth * 0.035,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
+        GestureDetector(
+          onTap: () {
+            showAlternativeUnits(
+              context,
+              productDetailsProvider.ItemId,
+            );
+          },
+          child: Card(
+            shape: RoundedRectangleBorder(
+              side: BorderSide(width: 0.4, color: Colors.grey.shade200),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            elevation: 0.4,
+            child: Padding(
+              padding: EdgeInsets.all(screenWidth * 0.024),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    productDetailsProvider.productName ?? "Unknown Product",
+                    style: GoogleFonts.poppins(
+                      fontSize: screenWidth * 0.037,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.grey.shade800,
                     ),
-                  ],
-                ),
-              ],
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'BarCode: ${productDetailsProvider.barcode ?? "N/A"}',
+                                style: GoogleFonts.poppins(
+                                  fontSize: screenWidth * 0.035,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                              SizedBox(width: screenWidth * 0.1),
+                              Row(
+                                children: [
+                                  Text(
+                                    'UOM: ',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: screenWidth * 0.035,
+                                      fontWeight: FontWeight.w500,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  Text(
+                                    selectedUOM.isEmpty
+                                        ? '${productDetailsProvider.UOM ?? "N/A"}'
+                                        : '${selectedUOM ?? "N/A"}',
+                                    style: GoogleFonts.poppins(
+                                      fontSize: screenWidth * 0.035,
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.blue,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor:
+                                          Colors.blue, // Underline color
+                                      decorationThickness: 2,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: screenHeight * 0.005),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              // Text(
+                              //   'UOM: ${productDetailsProvider.UOM ?? "N/A"}',
+                              //   style: GoogleFonts.poppins(
+                              //     fontSize: screenWidth * 0.035,
+                              //     fontWeight: FontWeight.w500,
+                              //     color: Colors.grey[600],
+                              //   ),
+                              // ),
+                              // SizedBox(width: screenWidth * 0.1),
+                              Text(
+                                'Price: ${productDetailsProvider.Cost != null ? productDetailsProvider.Cost.toStringAsFixed(3) : "0.000"}',
+                                style: GoogleFonts.poppins(
+                                  fontSize: screenWidth * 0.035,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.green,
+                                ),
+                              ),
+                            ],
+                          ),
+                          // SizedBox(height: screenHeight * 0.005),
+                          // Text(
+                          //   'Price: ${productDetailsProvider.Cost != null ? productDetailsProvider.Cost.toStringAsFixed(3) : "0.000"}',
+                          //   style: GoogleFonts.poppins(
+                          //     fontSize: screenWidth * 0.035,
+                          //     fontWeight: FontWeight.w600,
+                          //     color: Colors.green,
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -676,9 +809,10 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
   }
 
   showVendorSelectionSheet(
-    BuildContext context,
-    ProductDetailsProvider productDetailsProvider,
-  ) {
+      BuildContext context,
+      ProductDetailsProvider productDetailsProvider,
+      CreateRequestVendorDetailsProvider vendorprovider,
+      SalesPersonDetailsProvider salesmanprovider) {
     TextEditingController searchController = TextEditingController();
     List<Vendors> filteredVendors = List.from(vendorList);
 
@@ -735,9 +869,22 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
 
                               return GestureDetector(
                                 onTap: () {
+                                  salesmanprovider.setSalesPersonDetails(
+                                      vendor.salesPersonName,
+                                      vendor.salesPerson,
+                                      "");
+
+                                  vendorprovider.setVendorDetails(
+                                      vendor.vendorId,
+                                      vendor.vendorName,
+                                      vendor.salesPerson,
+                                      vendor.salesPersonName,
+                                      vendor.mobileNo);
                                   productDetailsProvider.setSelectedVendor(
                                       vendor, context);
-
+                                  selectedSalesManName =
+                                      vendor.salesPersonName.toString();
+                                  // _fetchSalesmanData(vendor.vendorId);
                                   Navigator.pop(
                                       context, vendor); // Return on tap
                                 },
@@ -1177,9 +1324,9 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           onPressed:
               itemList.isEmpty ? null : () => _showAddToCartDialog(context),
           style: ElevatedButton.styleFrom(
-            backgroundColor: itemList.isEmpty
-                ? Colors.grey.shade700
-                : const Color.fromARGB(255, 132, 23, 152),
+            backgroundColor:
+                itemList.isEmpty ? Colors.grey.shade700 : Constants.buttonColor,
+            // const Color.fromARGB(255, 132, 23, 152),
             padding: EdgeInsets.symmetric(vertical: screenHeight * 0.012),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

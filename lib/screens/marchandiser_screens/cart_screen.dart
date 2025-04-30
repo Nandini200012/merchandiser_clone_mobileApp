@@ -269,12 +269,13 @@ class _CartScreenState extends State<CartScreen> {
           leading: IconButton(
             onPressed: () {
               cartProvider.items.isEmpty
-                  ? Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => const CreateRequestScreen(),
-                      ),
-                      (route) => false,
-                    )
+                  ? Navigator.of(context).pop()
+                  // ? Navigator.of(context).pushAndRemoveUntil(
+                  //     MaterialPageRoute(
+                  //       builder: (context) => const CreateRequestScreen(),
+                  //     ),
+                  //     (route) => false,
+                  //   )
                   : Navigator.of(context).pop();
             },
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -300,7 +301,12 @@ class _CartScreenState extends State<CartScreen> {
                     },
                   );
                 },
-                child: const CircleAvatar(radius: 22, child: Text("MR")),
+                child: const CircleAvatar(
+                    radius: 22,
+                    backgroundColor: Colors.white,
+                    child: Text(
+                      "MR",
+                    )),
               ),
             ),
           ],
@@ -334,7 +340,7 @@ class _CartScreenState extends State<CartScreen> {
                             ),
                             child: Container(
                               decoration: const BoxDecoration(
-                                color: Color(0xffE9DDFF),
+                                color: Constants.primarylite,
                               ),
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 16.0,
@@ -383,6 +389,16 @@ class _CartScreenState extends State<CartScreen> {
                                           overflow: TextOverflow
                                               .ellipsis, // Adds ellipsis to the text if it overflows
                                         ),
+                                        Text(
+                                          'Customer name : $vendorName',
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              color: Constants.primaryColor),
+                                          maxLines:
+                                              2, // Adjust the number of lines as needed
+                                          overflow: TextOverflow
+                                              .ellipsis, // Adds ellipsis to the text if it overflows
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -421,10 +437,9 @@ class _CartScreenState extends State<CartScreen> {
                                               onTap: () {
                                                 _deleteAlert(context, item);
                                               },
-                                              child: const Icon(
-                                                Icons.delete,
-                                                color: Colors.purple,
-                                              ),
+                                              child: const Icon(Icons.delete,
+                                                  color:
+                                                      Constants.primaryColor),
                                             ),
                                           ],
                                         ),
@@ -478,12 +493,13 @@ class _CartScreenState extends State<CartScreen> {
                   height: 50,
                   width: 150,
                   decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [Colors.purple, Colors.purple],
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                    ),
-                    color: Colors.amber,
+                    color: Constants.buttonColor,
+                    // gradient: const LinearGradient(
+                    //   colors: [Colors.purple, Colors.purple],
+                    //   begin: Alignment.centerLeft,
+                    //   end: Alignment.centerRight,
+                    // ),
+                    // color: Colors.amber,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: InkWell(

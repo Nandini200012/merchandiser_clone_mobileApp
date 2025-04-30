@@ -321,8 +321,9 @@ class _SelectSalesmanScreenState extends State<SelectSalesmanScreen> {
                       height: 50,
                       width: double.infinity,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                            colors: [Colors.purple, Constants.primaryColor]),
+                        color: Constants.buttonColor,
+                        // gradient: LinearGradient(
+                        //     colors: [Colors.purple, Constants.primaryColor]),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: ElevatedButton(
