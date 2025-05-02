@@ -729,6 +729,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
           ),
           GestureDetector(
             onTap: () {
+              Navigator.pop(context);
               widget.onCategoriesChanged(_localSelectedCategories);
             },
             child: Material(
@@ -904,6 +905,8 @@ class _SelectedProductTile extends StatelessWidget {
                 style: const TextStyle(color: Colors.white)),
           ),
           title: _ProductDetailsColumn(
+            //  id:product.itemID,
+            //   cartProvider:cartProvider,
             productName: selectedProductName,
             barcode: selectedProductId,
             uom: selectedUOM,
@@ -989,12 +992,13 @@ class _ProductTile extends StatelessWidget {
             const SizedBox(width: 8.0),
             Expanded(
               child: _ProductDetailsColumn(
-                productName: product.productName,
-                barcode: product.barcode,
-                uom: product.UOM,
-                price: product.ProductCost,
-                onInfoPressed: onInfoPressed,
-              ),
+                  id: product.itemID,
+                  productName: product.productName,
+                  barcode: product.barcode,
+                  uom: product.UOM,
+                  price: product.ProductCost,
+                  onInfoPressed: onInfoPressed,
+                  isInCart: isInCart),
             ),
           ],
         ),
@@ -1004,23 +1008,35 @@ class _ProductTile extends StatelessWidget {
 }
 
 // Reusable Product Details Column
+// import 'package:flutter/material.dart';
+// import 'package:flutter_screenutil/flutter_screenutil.dart';
+// import 'package:provider/provider.dart';
+// import 'package:merchandiser_clone/model/cart_provider.dart';
+// import 'package:merchandiser_clone/constants.dart'; // Assuming Constants is defined here
+
 class _ProductDetailsColumn extends StatelessWidget {
   final String productName;
   final dynamic barcode;
   final String uom;
+  final int id;
   final double price;
   final VoidCallback onInfoPressed;
+  final bool isInCart;
 
   const _ProductDetailsColumn({
     required this.productName,
     required this.barcode,
+    this.id = 0,
     required this.uom,
     required this.price,
     required this.onInfoPressed,
+    this.isInCart = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    final cartProvider = Provider.of<CartProvider>(context);
+
     return Row(
       children: [
         Expanded(
@@ -1030,16 +1046,93 @@ class _ProductDetailsColumn extends StatelessWidget {
             children: [
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.6,
-                child: Text(productName,
-                    style: const TextStyle(fontSize: 14),
-                    overflow: TextOverflow.ellipsis),
+                child: Text(
+                  productName,
+                  style: const TextStyle(fontSize: 14),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              Text('Barcode : $barcode',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
-              Text('UNIT: $uom',
-                  style: const TextStyle(fontSize: 12, color: Colors.green)),
-              Text('Price : ${price.toStringAsFixed(3)}',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey)),
+              Text(
+                'Barcode: $barcode',
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              Text(
+                'UNIT: $uom',
+                style: const TextStyle(fontSize: 12, color: Colors.green),
+              ),
+              Text(
+                'Price: ${price.toStringAsFixed(3)}',
+                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              if (isInCart)
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Divider(
+                      thickness: 0.4,
+                      color: Colors.grey.shade300,
+                    ),
+                    SizedBox(
+                      width: 700.w, // Adjust width to fit multiple containers
+                      height: 20.h, // Adjust height for compact display
+                      child: Builder(
+                        builder: (context) {
+                          final uomQuantities = cartProvider
+                              .getQuantityByUomForItem(id.toString());
+                          if (uomQuantities.isEmpty) {
+                            return Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(13.r),
+                                color: Constants.primaryColor,
+                              ),
+                              padding: const EdgeInsets.all(2.0),
+                              child: Center(
+                                child: Text(
+                                  '0',
+                                  style: TextStyle(
+                                    fontSize: 10.sp,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          return ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: uomQuantities.length,
+                            itemBuilder: (context, index) {
+                              final entry =
+                                  uomQuantities.entries.elementAt(index);
+                              final uom = entry.key.toString();
+                              final quantity = entry.value;
+                              return Padding(
+                                padding: EdgeInsets.only(right: 8.w),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(13.r),
+                                    color: Constants.primaryColor,
+                                  ),
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Center(
+                                    child: Text(
+                                      '$uom: $quantity',
+                                      style: TextStyle(
+                                        fontSize: 10.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                )
             ],
           ),
         ),
@@ -1051,3 +1144,77 @@ class _ProductDetailsColumn extends StatelessWidget {
     );
   }
 }
+// class _ProductDetailsColumn extends StatelessWidget {
+//   final String productName;
+//   final dynamic barcode;
+
+//   final String uom;
+//   final int id;
+//   final double price;
+//   final VoidCallback onInfoPressed;
+//   final bool isInCart;
+
+//   const _ProductDetailsColumn(
+//       {required this.productName,
+//       required this.barcode,
+//       this.id = 0,
+//       required this.uom,
+//       required this.price,
+//       required this.onInfoPressed,
+//       this.isInCart = false});
+
+//   @override
+//   Widget build(BuildContext context) {
+//     final cartProvider = Provider.of<CartProvider>(context);
+
+//     return Row(
+//       children: [
+//         Expanded(
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             mainAxisSize: MainAxisSize.min,
+//             children: [
+//               SizedBox(
+//                 width: MediaQuery.of(context).size.width * 0.6,
+//                 child: Text(productName,
+//                     style: const TextStyle(fontSize: 14),
+//                     overflow: TextOverflow.ellipsis),
+//               ),
+//               Text('Barcode : $barcode',
+//                   style: const TextStyle(fontSize: 12, color: Colors.grey)),
+//               Text('UNIT: $uom',
+//                   style: const TextStyle(fontSize: 12, color: Colors.green)),
+//               Text('Price : ${price.toStringAsFixed(3)}',
+//                   style: const TextStyle(fontSize: 12, color: Colors.grey)),
+//             ],
+//           ),
+//         ),
+//         if (isInCart)
+//           Container(
+//             decoration: BoxDecoration(
+//                 borderRadius: BorderRadius.circular(13.r),
+//                 color: Constants.primaryColor),
+//             child: Center(
+//               child: Padding(
+//                 padding: const EdgeInsets.all(2.0),
+//                 child: Text(
+//                   cartProvider
+//                           .getQuantityByUomForItem(id.toString())
+//                           ?.toString() ??
+//                       '0',
+//                   style: TextStyle(
+//                       fontSize: 10.sp,
+//                       color: Colors.white,
+//                       fontWeight: FontWeight.w600),
+//                 ),
+//               ),
+//             ),
+//           ),
+//         IconButton(
+//           icon: Icon(Icons.info_outline, size: 24, color: Colors.grey.shade700),
+//           onPressed: onInfoPressed,
+//         ),
+//       ],
+//     );
+//   }
+// }
