@@ -378,17 +378,17 @@ class _CartScreenState extends State<CartScreen> {
                                           overflow: TextOverflow
                                               .ellipsis, // Adds ellipsis to the text if it overflows
                                         ),
-                                        Text(
-                                          'Barcode : ${items.first.barcode.toString()}',
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.grey,
-                                          ),
-                                          maxLines:
-                                              2, // Adjust the number of lines as needed
-                                          overflow: TextOverflow
-                                              .ellipsis, // Adds ellipsis to the text if it overflows
-                                        ),
+                                        // Text(
+                                        //   'Barcode : ${items.first.barcode.toString()}',
+                                        //   style: const TextStyle(
+                                        //     fontWeight: FontWeight.w500,
+                                        //     color: Colors.grey,
+                                        //   ),
+                                        //   maxLines:
+                                        //       2, // Adjust the number of lines as needed
+                                        //   overflow: TextOverflow
+                                        //       .ellipsis, // Adds ellipsis to the text if it overflows
+                                        // ),
                                         Text(
                                           'Customer name : $vendorName',
                                           style: const TextStyle(
@@ -426,6 +426,17 @@ class _CartScreenState extends State<CartScreen> {
                                               children: [
                                                 Text(
                                                   'Qty: ${item.quantity} ${item.uom}',
+                                                ),
+                                                Text(
+                                                  'Barcode : ${item.barcode.isEmpty ? 'N/A' : item.barcode}',
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                    color: Colors.grey,
+                                                  ),
+                                                  maxLines:
+                                                      2, // Adjust the number of lines as needed
+                                                  overflow: TextOverflow
+                                                      .ellipsis, // Adds ellipsis to the text if it overflows
                                                 ),
                                                 Text(
                                                   'Date: ${DateFormat('dd/MM/yyyy').format(item.selectedDate)}',

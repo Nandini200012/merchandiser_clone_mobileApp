@@ -224,12 +224,27 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     }
   }
 
+// Add this method to your _CartDetailsScreenState class
+  int _findExistingItemIndex(CartDetailsItem newItem) {
+    for (int i = 0; i < itemList.length; i++) {
+      final existingItem = itemList[i];
+      if (existingItem.productIndex == newItem.productIndex &&
+          existingItem.uomId == newItem.uomId &&
+          DateFormat('yyyy-MM-dd').format(existingItem.selectedDate) ==
+              DateFormat('yyyy-MM-dd').format(newItem.selectedDate)) {
+        return i; // Return index if match found
+      }
+    }
+    return -1; // Return -1 if no match
+  }
+
   // Add item to the list
   void _addItemToList() {
     final productDetailsProvider =
         Provider.of<ProductDetailsProvider>(context, listen: false);
     bool isValid = true;
 
+    // Validate inputs
     if (_quantityController.text.isEmpty) {
       _isQuantityValid = false;
       isValid = false;
@@ -261,8 +276,36 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       selectedbarcode ?? productDetailsProvider.barcode,
     );
 
+    // Check if item already exists
+    final existingIndex = _findExistingItemIndex(newItem);
+
     setState(() {
-      itemList.add(newItem);
+      if (existingIndex != -1) {
+        // Update quantity of existing item
+        final existingItem = itemList[existingIndex];
+        itemList[existingIndex] = CartDetailsItem(
+          existingItem.productName,
+          existingItem.productIndex,
+          existingItem.quantity + newItem.quantity, // Add quantities
+          existingItem.selectedDate,
+          _notesController.text.isNotEmpty
+              ? _notesController.text
+              : existingItem.note, // Keep existing note if new one is empty
+          _selectedReason ?? existingItem.reason,
+          existingItem.itemId,
+          existingItem.uomId,
+          existingItem.uom,
+          existingItem.cost,
+          existingItem.barcode,
+        );
+        showTopToast('Quantity updated for existing item');
+      } else {
+        // Add new item
+        itemList.add(newItem);
+        showTopToast('New item added to list');
+      }
+
+      // Clear form
       _quantityController.clear();
       _selectedDate = null;
       _notesController.clear();
@@ -274,8 +317,61 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       selectedUOM = "";
       selectedUOMID = -1;
       selectedbarcode = "";
+      selectedUomCost = 0;
+      selectedUomItemID = 0;
     });
   }
+  // void _addItemToList() {
+  //   final productDetailsProvider =
+  //       Provider.of<ProductDetailsProvider>(context, listen: false);
+  //   bool isValid = true;
+
+  //   if (_quantityController.text.isEmpty) {
+  //     _isQuantityValid = false;
+  //     isValid = false;
+  //   }
+  //   if (_selectedDate == null) {
+  //     _isExpiryDateValid = false;
+  //     isValid = false;
+  //   }
+
+  //   if (!isValid) {
+  //     setState(() {});
+  //     return;
+  //   }
+
+  //   final quantity = int.parse(_quantityController.text);
+  //   final newItem = CartDetailsItem(
+  //     productDetailsProvider.productName ?? '',
+  //     selectedUomItemID != 0
+  //         ? selectedUomItemID.toString()
+  //         : productDetailsProvider.productId?.toString() ?? '',
+  //     quantity,
+  //     _selectedDate!,
+  //     _notesController.text,
+  //     _selectedReason ?? (_showReasonText ? _reasonTextController.text : ''),
+  //     productDetailsProvider.ItemId,
+  //     selectedUOMID != -1 ? selectedUOMID : productDetailsProvider.UOMId,
+  //     selectedUOM.isNotEmpty ? selectedUOM : productDetailsProvider.UOM ?? '',
+  //     selectedUomCost != 0 ? selectedUomCost : productDetailsProvider.Cost,
+  //     selectedbarcode ?? productDetailsProvider.barcode,
+  //   );
+
+  //   setState(() {
+  //     itemList.add(newItem);
+  //     _quantityController.clear();
+  //     _selectedDate = null;
+  //     _notesController.clear();
+  //     _reasonTextController.clear();
+  //     _selectedReason = null;
+  //     _showReasonText = false;
+  //     _isQuantityValid = true;
+  //     _isExpiryDateValid = true;
+  //     selectedUOM = "";
+  //     selectedUOMID = -1;
+  //     selectedbarcode = "";
+  //   });
+  // }
 
   // Remove item from the list
   void _removeItemFromList(int index) {
