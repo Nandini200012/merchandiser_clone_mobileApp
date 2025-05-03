@@ -945,12 +945,12 @@ class _ProductTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isInCart = cartProvider.items.any(
-      (item) =>
-          item.itemId == product.itemID &&
-          item.productIndex == product.productId &&
-          item.uomId == product.UOMId,
-    );
+    final isInCart =
+        cartProvider.items.any((item) => item.itemId == product.itemID
+            // &&
+            // item.productIndex == product.productId &&
+            // item.uomId == product.UOMId,
+            );
 
     return InkWell(
       onTap: () {
