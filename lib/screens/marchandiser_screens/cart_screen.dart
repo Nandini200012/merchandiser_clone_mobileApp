@@ -86,10 +86,24 @@ class _CartScreenState extends State<CartScreen> {
       (item) => item.productName,
     );
 
+    groupedItems.forEach((key, value) {
+      print('Product: $key');
+      for (var item in value) {
+        print('  => ${jsonEncode({
+              'Barcode': item.productIndex,
+              'Qty': item.quantity,
+              'UOM': item.uom,
+              'Date': item.selectedDate.toIso8601String(),
+              'Note': item.note,
+              'Reason': item.reason,
+            })}');
+      }
+    });
+
     List<Map<String, dynamic>> detailsList = cartProvider.items.map((item) {
       return {
         "ItemID": item.itemId,
-        "Barcode": item.productIndex,
+        "Barcode": item.barcode,
         "Name": item.productName,
         "Qty": item.quantity.toDouble(),
         "UomID": item.uomId,

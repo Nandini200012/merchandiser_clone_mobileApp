@@ -97,10 +97,10 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
   int? selectedSalesPersonId;
   // Vendors? selectedVendor;
   String selectedUOM = "";
-  dynamic selectedUOMID = -1;
-  dynamic selectedbarcode = "";
+  dynamic selectedUOMID = 0;
+  dynamic selectedbarcode = null;
   dynamic selectedUomCost = 0;
-  dynamic selectedUomItemID = 0;
+  dynamic selectedUomItemID = null;
 
   late Future<VendorAndSalesPersonModel> salesmanData;
   @override
@@ -228,7 +228,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
   int _findExistingItemIndex(CartDetailsItem newItem) {
     for (int i = 0; i < itemList.length; i++) {
       final existingItem = itemList[i];
-      if (existingItem.productIndex == newItem.productIndex &&
+      if (existingItem.barcode == newItem.barcode &&
           existingItem.uomId == newItem.uomId &&
           DateFormat('yyyy-MM-dd').format(existingItem.selectedDate) ==
               DateFormat('yyyy-MM-dd').format(newItem.selectedDate)) {
@@ -270,7 +270,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       _notesController.text,
       _selectedReason ?? (_showReasonText ? _reasonTextController.text : ''),
       productDetailsProvider.ItemId,
-      selectedUOMID != -1 ? selectedUOMID : productDetailsProvider.UOMId,
+      selectedUOMID != 0 ? selectedUOMID : productDetailsProvider.UOMId,
       selectedUOM.isNotEmpty ? selectedUOM : productDetailsProvider.UOM ?? '',
       selectedUomCost != 0 ? selectedUomCost : productDetailsProvider.Cost,
       selectedbarcode ?? productDetailsProvider.barcode,
@@ -305,20 +305,21 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         showTopToast('New item added to list');
       }
 
-      // Clear form
-      _quantityController.clear();
-      _selectedDate = null;
-      _notesController.clear();
-      _reasonTextController.clear();
-      _selectedReason = null;
-      _showReasonText = false;
-      _isQuantityValid = true;
-      _isExpiryDateValid = true;
-      selectedUOM = "";
-      selectedUOMID = -1;
-      selectedbarcode = "";
-      selectedUomCost = 0;
-      selectedUomItemID = 0;
+      setState(() {
+        _quantityController.clear();
+        _selectedDate = null;
+        _notesController.clear();
+        _reasonTextController.clear();
+        _selectedReason = null;
+        _showReasonText = false;
+        _isQuantityValid = true;
+        _isExpiryDateValid = true;
+        selectedUOM = productDetailsProvider.UOM ?? "";
+        selectedUOMID = productDetailsProvider.UOMId ?? "";
+        selectedbarcode = productDetailsProvider.barcode;
+        selectedUomCost = productDetailsProvider.Cost;
+        selectedUomItemID = productDetailsProvider.ItemId;
+      });
     });
   }
   // void _addItemToList() {
@@ -382,12 +383,48 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
 
   // Add items to cart
   void _addToCart() {
-    final cartProvider = Provider.of<CartProvider>(context, listen: false);
-    for (final item in itemList) {
-      if (selectedUOM.isNotEmpty) {}
-      cartProvider.addToCart(item);
+    if (itemList.isEmpty) {
+      showTopToast('No items to add to cart');
+      return;
     }
-    showTopToast('Item added to bin');
+
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
+
+    for (final item in itemList) {
+      final existingIndex = cartProvider.cartItems.indexWhere((cartItem) =>
+          cartItem.barcode == item.barcode &&
+          cartItem.uomId == item.uomId &&
+          DateFormat('yyyy-MM-dd').format(cartItem.selectedDate) ==
+              DateFormat('yyyy-MM-dd').format(item.selectedDate));
+
+      if (existingIndex != -1) {
+        // Update quantity
+        final existingItem = cartProvider.cartItems[existingIndex];
+        final updatedItem = CartDetailsItem(
+          existingItem.productName,
+          existingItem.productIndex,
+          existingItem.quantity + item.quantity,
+          existingItem.selectedDate,
+          item.note.isNotEmpty ? item.note : existingItem.note,
+          item.reason.isNotEmpty ? item.reason : existingItem.reason,
+          existingItem.itemId,
+          existingItem.uomId,
+          existingItem.uom,
+          existingItem.cost,
+          existingItem.barcode,
+        );
+
+        cartProvider.updateItem(existingIndex, updatedItem);
+      } else {
+        // Add new item
+        cartProvider.addToCart(item);
+      }
+    }
+
+    showTopToast('Items added to bin successfully');
+    setState(() {
+      itemList.clear();
+    });
   }
 
   // Show add-to-cart confirmation dialog
@@ -807,7 +844,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                           Row(
                             children: [
                               Text(
-                                'BarCode: ${selectedbarcode == null || selectedbarcode.isEmpty ? (productDetailsProvider.barcode ?? "N/A") : selectedbarcode}',
+                                'BarCode: ${selectedbarcode == null ? (productDetailsProvider.barcode ?? "N/A") : selectedbarcode}',
                                 style: GoogleFonts.poppins(
                                   fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w500,
@@ -1165,22 +1202,23 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
               ),
               onEditingComplete: () {
                 if (_isQuantityValid && _selectedDate == null) {
-                  try {
-                    // if (quantity > 0 && _selectedDate == null) {
-                    // Automatically open date picker if quantity is valid and no date is selected
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _selectDate(context);
-                    });
-                    // }
-                  } catch (e) {
-                    _isQuantityValid = false;
-                  }
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _selectDate(context);
+                  });
                 }
               },
               onChanged: (value) {
                 setState(() {
-                  _isQuantityValid = value.isNotEmpty;
-                  // Check if the input is a valid positive integer
+                  // Disallow negative quantities or zero
+                  final parsed = int.tryParse(value);
+                  if (parsed == null || parsed <= 0) {
+                    _isQuantityValid = false;
+                    _quantityController
+                        .clear(); // optional: clear invalid input
+                    showTopToast('Quantity must be a positive number');
+                  } else {
+                    _isQuantityValid = true;
+                  }
                 });
               },
             ),

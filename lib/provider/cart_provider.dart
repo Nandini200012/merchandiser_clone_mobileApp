@@ -6,6 +6,7 @@ import 'package:merchandiser_clone/screens/marchandiser_screens/cart_details_scr
 class CartProvider extends ChangeNotifier {
   List<CartDetailsItem> _itemList = [];
   List<CartDetailsItem> get items => _itemList;
+  List<CartDetailsItem> get cartItems => _itemList;
   Item? cartItem;
 
   void addToCart(CartDetailsItem newList) {
@@ -24,6 +25,11 @@ class CartProvider extends ChangeNotifier {
       totalQuantity += item.quantity;
     }
     return totalQuantity;
+  }
+
+  void updateItem(int index, CartDetailsItem item) {
+    _itemList[index] = item;
+    notifyListeners();
   }
 
   void removeFromCart(CartDetailsItem item) {
