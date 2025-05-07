@@ -173,26 +173,35 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
   Future<void> _fetchLastSalesPrice() async {
     final productDetailsProvider =
         Provider.of<ProductDetailsProvider>(context, listen: false);
-    final vendorDetailsProvider =
-        Provider.of<CreateRequestVendorDetailsProvider>(context, listen: false);
 
-    final barcode = productDetailsProvider.barcode ?? '';
-    final customerId = vendorDetailsProvider.vendorId?.toString() ?? '';
-
+    final itemID = productDetailsProvider.ItemId ?? '';
+    log('Item ID selected Product: $itemID');
     try {
       final response = await http.get(
         Uri.parse(Urls.getLastSalesPrice),
-        headers: {'barcode': barcode, 'customerId': customerId},
+        headers: {'itemID': itemID.toString()},
       );
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);
-        final data = responseData['data'];
+        final List<dynamic> data = responseData['data'] ?? [];
+
         if (data.isNotEmpty) {
-          productDetailsProvider.updateCost(data[0]['UnitPrice']);
+          final List<Map<String, dynamic>> formattedList =
+              List<Map<String, dynamic>>.from(data);
+          productDetailsProvider.setSalesPriceList(formattedList);
+
+          log('Last sales price data: $formattedList');
+
+          // Default to selectedUOMID if available
+          final currentUomId =
+              selectedUOMID != 0 ? selectedUOMID : productDetailsProvider.UOMId;
+
+          productDetailsProvider.updateCostByUom(currentUomId);
         }
       } else {
         showTopToast('Failed to fetch price: ${response.statusCode}');
+        log('Failed to fetch price: ${response.statusCode}');
       }
     } catch (e) {
       showTopToast('Error fetching price: $e');
@@ -224,7 +233,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
     }
   }
 
-// Add this method to your _CartDetailsScreenState class
+  // Add this method to your _CartDetailsScreenState class
   int _findExistingItemIndex(CartDetailsItem newItem) {
     for (int i = 0; i < itemList.length; i++) {
       final existingItem = itemList[i];
@@ -698,6 +707,12 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                       selectedbarcode = item['productId'];
                                       // infoButtonClickedIndex = index;
                                     });
+                                    final productDetailsProvider =
+                                        Provider.of<ProductDetailsProvider>(
+                                            context,
+                                            listen: false);
+                                    productDetailsProvider
+                                        .updateCostByUom(selectedUOMID);
                                     Navigator.pop(context);
                                   },
                                 ),
