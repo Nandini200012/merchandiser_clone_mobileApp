@@ -151,7 +151,7 @@ class _MarchendiserReportDetailsScreenState
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
-                                                "ItemCode : ${data.prdouctId}",
+                                                "BarCode : ${data.prdouctId}",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 10.sp,
@@ -179,7 +179,7 @@ class _MarchendiserReportDetailsScreenState
                                                 ),
                                               ),
                                               Text(
-                                                "Price : ${data.cost.toStringAsFixed(2)}",
+                                                "Cost : ${data.cost.toStringAsFixed(2)}",
                                                 style: TextStyle(
                                                   fontWeight: FontWeight.w400,
                                                   fontSize: 10.sp,

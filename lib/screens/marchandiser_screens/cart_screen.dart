@@ -108,7 +108,7 @@ class _CartScreenState extends State<CartScreen> {
         "Qty": item.quantity.toDouble(),
         "UomID": item.uomId,
         "UOM": item.uom,
-        "Cost": item.cost,
+        "Cost": item.uomCost,
         "Date": item.selectedDate.toIso8601String(),
         "Note": item.note,
         "Reason": item.reason,

@@ -32,12 +32,14 @@ class CartDetailsItem {
   final String note;
   final String reason;
   final dynamic itemId;
-  final dynamic uomId;
+  final String uomId;
   dynamic uom;
+  final dynamic uomCost;
   final dynamic cost;
   final dynamic barcode;
 
   CartDetailsItem(
+    this.uomCost,
     this.productName,
     this.productIndex,
     this.quantity,
@@ -57,8 +59,10 @@ class CartDetailsScreen extends StatefulWidget {
   final String? vendorName;
   final String? salesManName;
   final String? salesManId;
+  final String? uomId;
   const CartDetailsScreen(
       {super.key,
+      required this.uomId,
       required this.salesManId,
       required this.salesManName,
       required this.vendorId,
@@ -120,8 +124,10 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         context,
         listen: false,
       );
+
       productdetailsprovider.setSelectedVendor(
           vendorDetailsProvider.getVendor(), context);
+      // productdetailsprovider.fetchcostbyUom(widget.uomId.toString());
     });
   }
 
@@ -183,6 +189,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       );
 
       if (response.statusCode == 200) {
+        log('response from api : ${response.body}');
         final responseData = json.decode(response.body);
         final List<dynamic> data = responseData['data'] ?? [];
 
@@ -190,14 +197,14 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           final List<Map<String, dynamic>> formattedList =
               List<Map<String, dynamic>>.from(data);
           productDetailsProvider.setSalesPriceList(formattedList);
-
+          productDetailsProvider.fetchcostbyUom(widget.uomId.toString());
           log('Last sales price data: $formattedList');
 
           // Default to selectedUOMID if available
           final currentUomId =
               selectedUOMID != 0 ? selectedUOMID : productDetailsProvider.UOMId;
 
-          productDetailsProvider.updateCostByUom(currentUomId);
+          // productDetailsProvider.updateCostByUom(currentUomId);
         }
       } else {
         showTopToast('Failed to fetch price: ${response.statusCode}');
@@ -270,6 +277,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
 
     final quantity = int.parse(_quantityController.text);
     final newItem = CartDetailsItem(
+      selectedUomCost != 0 ? selectedUomCost : productDetailsProvider.uomcost,
       productDetailsProvider.productName ?? '',
       selectedUomItemID != 0
           ? selectedUomItemID.toString()
@@ -279,9 +287,11 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       _notesController.text,
       _selectedReason ?? (_showReasonText ? _reasonTextController.text : ''),
       productDetailsProvider.ItemId,
-      selectedUOMID != 0 ? selectedUOMID : productDetailsProvider.UOMId,
+      selectedUOMID.toString() != '0'
+          ? selectedUOMID.toString()
+          : productDetailsProvider.UOMId.toString(),
       selectedUOM.isNotEmpty ? selectedUOM : productDetailsProvider.UOM ?? '',
-      selectedUomCost != 0 ? selectedUomCost : productDetailsProvider.Cost,
+      selectedUomCost != 0 ? selectedUomCost : productDetailsProvider.uomcost,
       selectedbarcode ?? productDetailsProvider.barcode,
     );
 
@@ -293,6 +303,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         // Update quantity of existing item
         final existingItem = itemList[existingIndex];
         itemList[existingIndex] = CartDetailsItem(
+          existingItem.uomCost,
           existingItem.productName,
           existingItem.productIndex,
           existingItem.quantity + newItem.quantity, // Add quantities
@@ -304,7 +315,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           existingItem.itemId,
           existingItem.uomId,
           existingItem.uom,
-          existingItem.cost,
+          existingItem.uomCost,
           existingItem.barcode,
         );
         showTopToast('Quantity updated for existing item');
@@ -326,62 +337,11 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         selectedUOM = productDetailsProvider.UOM ?? "";
         selectedUOMID = productDetailsProvider.UOMId ?? "";
         selectedbarcode = productDetailsProvider.barcode;
-        selectedUomCost = productDetailsProvider.Cost;
+        selectedUomCost = productDetailsProvider.uomcost;
         selectedUomItemID = productDetailsProvider.ItemId;
       });
     });
   }
-  // void _addItemToList() {
-  //   final productDetailsProvider =
-  //       Provider.of<ProductDetailsProvider>(context, listen: false);
-  //   bool isValid = true;
-
-  //   if (_quantityController.text.isEmpty) {
-  //     _isQuantityValid = false;
-  //     isValid = false;
-  //   }
-  //   if (_selectedDate == null) {
-  //     _isExpiryDateValid = false;
-  //     isValid = false;
-  //   }
-
-  //   if (!isValid) {
-  //     setState(() {});
-  //     return;
-  //   }
-
-  //   final quantity = int.parse(_quantityController.text);
-  //   final newItem = CartDetailsItem(
-  //     productDetailsProvider.productName ?? '',
-  //     selectedUomItemID != 0
-  //         ? selectedUomItemID.toString()
-  //         : productDetailsProvider.productId?.toString() ?? '',
-  //     quantity,
-  //     _selectedDate!,
-  //     _notesController.text,
-  //     _selectedReason ?? (_showReasonText ? _reasonTextController.text : ''),
-  //     productDetailsProvider.ItemId,
-  //     selectedUOMID != -1 ? selectedUOMID : productDetailsProvider.UOMId,
-  //     selectedUOM.isNotEmpty ? selectedUOM : productDetailsProvider.UOM ?? '',
-  //     selectedUomCost != 0 ? selectedUomCost : productDetailsProvider.Cost,
-  //     selectedbarcode ?? productDetailsProvider.barcode,
-  //   );
-
-  //   setState(() {
-  //     itemList.add(newItem);
-  //     _quantityController.clear();
-  //     _selectedDate = null;
-  //     _notesController.clear();
-  //     _reasonTextController.clear();
-  //     _selectedReason = null;
-  //     _showReasonText = false;
-  //     _isQuantityValid = true;
-  //     _isExpiryDateValid = true;
-  //     selectedUOM = "";
-  //     selectedUOMID = -1;
-  //     selectedbarcode = "";
-  //   });
-  // }
 
   // Remove item from the list
   void _removeItemFromList(int index) {
@@ -410,6 +370,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         // Update quantity
         final existingItem = cartProvider.cartItems[existingIndex];
         final updatedItem = CartDetailsItem(
+          existingItem.uomCost,
           existingItem.productName,
           existingItem.productIndex,
           existingItem.quantity + item.quantity,
@@ -419,7 +380,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
           existingItem.itemId,
           existingItem.uomId,
           existingItem.uom,
-          existingItem.cost,
+          existingItem.uomCost,
           existingItem.barcode,
         );
 
@@ -502,13 +463,19 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: _buildAppBar(context, screenWidth),
-        body: _buildBody(
-            context,
-            screenWidth,
-            screenHeight,
-            productDetailsProvider,
-            vendorDetailsProvider,
-            salesPersonDetailsProvider),
+        body: isLoading
+            ? const Center(
+                child: CircularProgressIndicator(
+                  color: Constants.primaryColor,
+                ),
+              )
+            : _buildBody(
+                context,
+                screenWidth,
+                screenHeight,
+                productDetailsProvider,
+                vendorDetailsProvider,
+                salesPersonDetailsProvider),
       ),
     );
   }
@@ -556,13 +523,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
         ),
       ],
       flexibleSpace: Container(
-        decoration: const BoxDecoration(color: Constants.primaryColor
-            // gradient: LinearGradient(
-            //   colors: [Constants.primaryColor],
-            //   begin: Alignment.topCenter,
-            //   end: Alignment.bottomCenter,
-            // ),
-            ),
+        decoration: const BoxDecoration(color: Constants.primaryColor),
       ),
     );
   }
@@ -639,9 +600,9 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                             SizedBox(
                               height: 50.h,
                             ),
-                            Text(
+                            const Text(
                               'No data found!',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 16.0,
                                 fontWeight: FontWeight.w400,
                               ),
@@ -689,28 +650,31 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                         style: const TextStyle(
                                             color: Colors.green),
                                       ),
-                                      Text(
-                                        'Price : ${item['Cost'].toStringAsFixed(2)}',
-                                        style:
-                                            TextStyle(color: Colors.grey[700]),
-                                      ),
+                                      // Text(
+                                      //   'Price : ${item['Cost']}',
+                                      //   style:
+                                      //       TextStyle(color: Colors.grey[700]),
+                                      // ),
                                     ],
                                   ),
                                   onTap: () {
                                     setState(() {
-                                      // selectedProductName = item['productName'];
-                                      // selectedProductId = item['productId'];
                                       selectedUOM = item['UOM'];
                                       selectedUOMID = item['UOMId'];
-                                      selectedUomCost = item['Cost'];
+                                      // selectedUomCost = item['Cost'];
                                       selectedUomItemID = item['ItemID'];
                                       selectedbarcode = item['productId'];
-                                      // infoButtonClickedIndex = index;
                                     });
                                     final productDetailsProvider =
                                         Provider.of<ProductDetailsProvider>(
                                             context,
                                             listen: false);
+                                    productDetailsProvider.fetchcostbyUom(
+                                        selectedUOMID.toString());
+                                    setState(() {
+                                      selectedUomCost =
+                                          productDetailsProvider.uomcost;
+                                    });
                                     productDetailsProvider
                                         .updateCostByUom(selectedUOMID);
                                     Navigator.pop(context);
@@ -759,7 +723,6 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // SizedBox(height: screenHeight * 0.01),
                           Row(
                             children: [
                               Text(
@@ -768,9 +731,6 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                   fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w700,
                                   color: Colors.black,
-                                  // decoration: TextDecoration.underline,
-                                  // decorationColor: Colors.blue, // Underline color
-                                  // decorationThickness: 2,
                                 ),
                               ),
                               GestureDetector(
@@ -800,7 +760,6 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                               ),
                             ],
                           ),
-
                           SizedBox(height: 2.h),
                           Text(
                             selectedSalesManName.isEmpty
@@ -900,17 +859,8 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              // Text(
-                              //   'UOM: ${productDetailsProvider.UOM ?? "N/A"}',
-                              //   style: GoogleFonts.poppins(
-                              //     fontSize: screenWidth * 0.035,
-                              //     fontWeight: FontWeight.w500,
-                              //     color: Colors.grey[600],
-                              //   ),
-                              // ),
-                              // SizedBox(width: screenWidth * 0.1),
                               Text(
-                                'Price: ${selectedUomCost != 0 ? selectedUomCost.toStringAsFixed(3) : productDetailsProvider.Cost.toStringAsFixed(3) ?? "0.000"}',
+                                'Cost: ${productDetailsProvider.uomcost.toStringAsFixed(3) ?? "0.000"}',
                                 style: GoogleFonts.poppins(
                                   fontSize: screenWidth * 0.035,
                                   fontWeight: FontWeight.w600,
@@ -919,15 +869,6 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                               ),
                             ],
                           ),
-                          // SizedBox(height: screenHeight * 0.005),
-                          // Text(
-                          //   'Price: ${productDetailsProvider.Cost != null ? productDetailsProvider.Cost.toStringAsFixed(3) : "0.000"}',
-                          //   style: GoogleFonts.poppins(
-                          //     fontSize: screenWidth * 0.035,
-                          //     fontWeight: FontWeight.w600,
-                          //     color: Colors.green,
-                          //   ),
-                          // ),
                         ],
                       ),
                     ],
@@ -963,7 +904,8 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
               height: MediaQuery.of(context).size.height * 0.9,
               decoration: BoxDecoration(
                 color: Colors.grey.shade100,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(20)),
               ),
               child: Column(
                 children: [
@@ -980,7 +922,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                       });
                     },
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.search),
+                      prefixIcon: const Icon(Icons.search),
                       hintText: 'Search vendor...',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -1023,7 +965,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                 },
                                 child: Container(
                                   margin: EdgeInsets.symmetric(vertical: 6.h),
-                                  padding: EdgeInsets.all(12),
+                                  padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? Colors.blue.shade100
@@ -1037,7 +979,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                       BoxShadow(
                                         color: Colors.grey.withOpacity(0.1),
                                         blurRadius: 4,
-                                        offset: Offset(0, 2),
+                                        offset: const Offset(0, 2),
                                       ),
                                     ],
                                   ),
@@ -1049,10 +991,11 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                           vendor.vendorName.isNotEmpty
                                               ? vendor.vendorName[0]
                                               : '',
-                                          style: TextStyle(color: Colors.white),
+                                          style: const TextStyle(
+                                              color: Colors.white),
                                         ),
                                       ),
-                                      SizedBox(width: 12),
+                                      const SizedBox(width: 12),
                                       Expanded(
                                         child: Column(
                                           crossAxisAlignment:
@@ -1065,7 +1008,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                                 fontWeight: FontWeight.w600,
                                               ),
                                             ),
-                                            SizedBox(height: 4),
+                                            const SizedBox(height: 4),
                                             Text(
                                               'Code: ${vendor.vendorCode}',
                                               style: TextStyle(
@@ -1082,7 +1025,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                                         ),
                                       ),
                                       if (isSelected)
-                                        Icon(Icons.check_circle,
+                                        const Icon(Icons.check_circle,
                                             color: Colors.blue),
                                     ],
                                   ),
@@ -1090,7 +1033,7 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                               );
                             },
                           )
-                        : Center(child: Text('No vendors found')),
+                        : const Center(child: Text('No vendors found')),
                   ),
                 ],
               ),
@@ -1340,15 +1283,6 @@ class _CartDetailsScreenState extends State<CartDetailsScreen> {
                         _showReasonText = value == "Other";
                       });
                     },
-
-              // onChanged: _selectedReason == "EXPIRED GOODS"
-              //     ? null
-              //     : (value) {
-              //         setState(() {
-              //           _selectedReason = value;
-              //           _showReasonText = value == "Other";
-              //         });
-              //       },
             ),
           ),
         ),

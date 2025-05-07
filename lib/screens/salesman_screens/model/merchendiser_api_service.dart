@@ -144,6 +144,7 @@ class MerchendiserApiService {
     if (response.statusCode == 200) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       if (responseData['isSuccess']) {
+        log("url : $Url Response:>>>$responseData");
         return responseData['data'];
       } else {
         throw Exception('Error: ${responseData['message']}');
