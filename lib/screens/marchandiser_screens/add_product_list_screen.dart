@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_brace_in_string_interps
+
 import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +68,7 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
   dynamic _selectedItemID = '';
   dynamic _selectedBarcode = '';
   int? _infoButtonClickedIndex;
+  dynamic _selectedUomCost = 0.0;
 
   @override
   void initState() {
@@ -181,6 +184,8 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
               _selectedCost = item['Cost'];
               _selectedItemID = item['ItemID'];
               _selectedBarcode = item['Barcode'];
+              _selectedUomCost = item['uomCost'];
+              _selectedUOMId = item['UOMId'];
               _infoButtonClickedIndex = index;
             });
           },
@@ -485,6 +490,8 @@ class _AddProductListViewScreenState extends State<AddProductListViewScreen> {
                         selectedCost: _selectedCost,
                         selectedItemID: _selectedItemID,
                         selectedBarcode: _selectedBarcode,
+                        selectedUomCost: _selectedUomCost,
+                        selectedUOMid: _selectedUOMId,
                         onInfoPressed: () => _showAlternativeUnits(
                             context, _selectedItemID, _infoButtonClickedIndex!),
                       )
@@ -852,14 +859,17 @@ class _SelectedProductTile extends StatelessWidget {
   final String selectedProductName;
   final String selectedProductId;
   final String selectedUOM;
+  final String selectedUOMid;
   final double selectedCost;
   final dynamic selectedItemID;
   final dynamic selectedBarcode;
+  final dynamic selectedUomCost;
   final VoidCallback onInfoPressed;
 
   const _SelectedProductTile({
     required this.productDetailsProvider,
     required this.vendorId,
+    required this.selectedUOMid,
     required this.vendorName,
     required this.salesManName,
     required this.salesManId,
@@ -870,6 +880,7 @@ class _SelectedProductTile extends StatelessWidget {
     required this.selectedItemID,
     required this.selectedBarcode,
     required this.onInfoPressed,
+    required this.selectedUomCost,
   });
 
   @override
@@ -877,14 +888,14 @@ class _SelectedProductTile extends StatelessWidget {
     return InkWell(
       onTap: () {
         productDetailsProvider.setProductDetails(
-          selectedProductId,
-          selectedProductName,
-          selectedUOM,
-          selectedItemID, // Assuming UOMId is same as ItemID for simplicity
-          selectedCost,
-          selectedItemID,
-          selectedBarcode,
-        );
+            selectedProductId,
+            selectedProductName,
+            selectedUOM,
+            selectedItemID, // Assuming UOMId is same as ItemID for simplicity
+            selectedCost,
+            selectedItemID,
+            selectedBarcode,
+            selectedUomCost);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => CartDetailsScreen(
@@ -892,6 +903,7 @@ class _SelectedProductTile extends StatelessWidget {
               vendorName: vendorName,
               salesManId: salesManId,
               salesManName: salesManName,
+              uomId: selectedUOMid,
             ),
           ),
         );
@@ -911,6 +923,7 @@ class _SelectedProductTile extends StatelessWidget {
             barcode: selectedProductId,
             uom: selectedUOM,
             price: selectedCost,
+            // uomId: selectedUOMid,
             onInfoPressed: onInfoPressed,
           ),
         ),
@@ -947,7 +960,7 @@ class _ProductTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isInCart =
         cartProvider.items.any((item) => item.itemId == product.itemID
-            // &&
+            // Ff&&
             // item.productIndex == product.productId &&
             // item.uomId == product.UOMId,
             );
@@ -955,14 +968,14 @@ class _ProductTile extends StatelessWidget {
     return InkWell(
       onTap: () {
         productDetailsProvider.setProductDetails(
-          product.productId,
-          product.productName,
-          product.UOM,
-          product.UOMId,
-          product.ProductCost,
-          product.itemID,
-          product.barcode,
-        );
+            product.productId,
+            product.productName,
+            product.UOM,
+            product.UOMId,
+            product.ProductCost,
+            product.itemID,
+            product.barcode,
+            product.uomCost);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => CartDetailsScreen(
@@ -970,9 +983,11 @@ class _ProductTile extends StatelessWidget {
               vendorName: vendorName,
               salesManId: salesManId,
               salesManName: salesManName,
+              uomId: product.UOMId.toString(),
             ),
           ),
         );
+        log("uom id ${product.UOMId}");
       },
       child: Container(
         decoration: BoxDecoration(
@@ -993,6 +1008,7 @@ class _ProductTile extends StatelessWidget {
             Expanded(
               child: _ProductDetailsColumn(
                   id: product.itemID,
+                  // uomId: product.UOMId,
                   productName: product.productName,
                   barcode: product.barcode,
                   uom: product.UOM,
@@ -1019,6 +1035,7 @@ class _ProductDetailsColumn extends StatelessWidget {
   final dynamic barcode;
   final String uom;
   final int id;
+  // final String uomId;
   final double price;
   final VoidCallback onInfoPressed;
   final bool isInCart;
@@ -1027,6 +1044,7 @@ class _ProductDetailsColumn extends StatelessWidget {
     required this.productName,
     required this.barcode,
     this.id = 0,
+    // required this.uomId,
     required this.uom,
     required this.price,
     required this.onInfoPressed,

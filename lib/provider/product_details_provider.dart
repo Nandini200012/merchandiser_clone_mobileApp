@@ -16,7 +16,7 @@ class ProductDetailsProvider with ChangeNotifier {
   dynamic _Cost;
   dynamic _ItemId;
   dynamic _barcode;
-
+  double _uomcost = 0.00;
   // Getters for product details
   dynamic get productId => _productId;
   dynamic get productName => _productName;
@@ -25,10 +25,18 @@ class ProductDetailsProvider with ChangeNotifier {
   dynamic get Cost => _Cost;
   dynamic get ItemId => _ItemId;
   dynamic get barcode => _barcode;
+  double get uomcost => _uomcost;
 
   /// Set product details and notify listeners
-  void setProductDetails(dynamic productId, dynamic productName, dynamic UOM,
-      dynamic UOMId, dynamic Cost, dynamic ItemID, dynamic barcode) {
+  void setProductDetails(
+      dynamic productId,
+      dynamic productName,
+      dynamic UOM,
+      dynamic UOMId,
+      dynamic Cost,
+      dynamic ItemID,
+      dynamic barcode,
+      dynamic uomCost) {
     _productId = productId;
     _productName = productName;
     _UOM = UOM;
@@ -36,13 +44,14 @@ class ProductDetailsProvider with ChangeNotifier {
     _Cost = Cost;
     _ItemId = ItemID;
     _barcode = barcode;
+    // _uomcost = uomCost??0.00;
 
     notifyListeners();
   }
 
   /// Update only the cost of the product
   void updateCost(dynamic cost) {
-    _Cost = cost;
+    _uomcost = cost;
     notifyListeners();
   }
 
@@ -82,6 +91,17 @@ class ProductDetailsProvider with ChangeNotifier {
     }
   }
 
+  fetchcostbyUom(String selectedUomId) {
+    final match = _salesPriceList.firstWhere(
+      (item) => item['uomId'] == int.parse(selectedUomId.toString()),
+      orElse: () => {},
+    );
+    if (match.isNotEmpty) {
+      _uomcost = match['uomCost'] ?? 0;
+      notifyListeners();
+    }
+    log("id:$selectedUomId UOM Cost: $_uomcost");
+  }
   // -------------------------------------
   // ✅ Vendor and Salesperson selection
   // -------------------------------------
