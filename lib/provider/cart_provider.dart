@@ -74,6 +74,11 @@ class CartProvider extends ChangeNotifier {
     developer.log('qty: ${items.length}');
     return uomQuantities;
   }
+
+  void removeAllFromCart(List<CartDetailsItem> itemsToRemove) {
+    _itemList.removeWhere((item) => itemsToRemove.contains(item));
+    notifyListeners();
+  }
 }
 
 // import 'dart:developer';
